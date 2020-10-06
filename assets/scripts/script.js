@@ -1286,3 +1286,33 @@ window.eliminateFloatingFinalZeroes = function eliminateFloatingFinalZeroes(valu
     }
     return split[1].length === 0 ? split[0] : split.join(decSeparator);
 };
+
+window.loadTokenInfos = async function loadTokenInfos(addresses, wethAddress) {
+    var single = (typeof addresses).toLowerCase() === 'string';
+    addresses = single ? [addresses] : addresses;
+    var tokens = [];
+    for (var address of addresses) {
+        address = window.web3.utils.toChecksumAddress(address);
+        var token = window.newContract(window.context.votingTokenAbi, address);
+        tokens.push({
+            address,
+            token,
+            name: address === wethAddress ? 'Ethereum' : await window.blockchainCall(token.methods.name),
+            symbol: address === wethAddress ? 'ETH' : await window.blockchainCall(token.methods.symbol),
+            decimals: address === wethAddress ? '18' : await window.blockchainCall(token.methods.decimals),
+            logo: await window.loadLogo(address === wethAddress ? window.voidEthereumAddress : address)
+        });
+    }
+    return single ? tokens[0] : tokens;
+};
+
+window.loadLogo = async function loadLogo(address) {
+    address = window.web3.utils.toChecksumAddress(address);
+    var logo = address === window.voidEthereumAddress ? 'assets/img/eth-logo.png' : window.context.trustwalletImgURLTemplate.format(address);
+    try {
+        await window.AJAXRequest(logo);
+    } catch (e) {
+        logo = 'assets/img/default-logo.png';
+    }
+    return logo;
+};

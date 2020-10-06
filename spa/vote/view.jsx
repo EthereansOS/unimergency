@@ -1,19 +1,15 @@
 var Vote = React.createClass({
-    requiredModules: [
-        "spa/voting"
-    ],
     requiredScripts: [
         'spa/bigLoader.jsx',
         'spa/ghostLoader.jsx'
     ],
     getDefaultSubscriptions() {
         return {
-            'ethereum/update': () => this.controller.loadItems(),
-            'ethereum/ping': () => this.controller.calculatePosition()
+            'ethereum/update': () => this.controller.loadData()
         };
     },
     componentDidMount() {
-        this.controller.loadItems();
+        this.controller.loadData();
     },
     renderItemsList() {
         var items = Object.values(this.state.items);
@@ -49,12 +45,19 @@ var Vote = React.createClass({
                 message && message.indexOf('denied') === -1 && setTimeout(function () {
                     alert(message);
                 });
-                !message && _this.controller.calculatePosition();
+                !message && _this.controller.loadTokenData();
             });
         }
-        _this.setState({ performing: (action + '_' + target.dataset.tokenid) }, function () {
+        _this.setState({ performing: action }, function () {
             _this.controller['perform' + action.firstLetterToUpperCase()].apply(this, args).catch(close).finally(close);
         });
+    },
+    max(e) {
+        e && e.preventDefault && e.preventDefault(true) && e.stopPropagation && e.stopPropagation(true);
+        this.input.value = window.fromDecimals(this.state.balanceOf, this.state.selectedToken.decimals, true);
+    },
+    onVotingToken(e) {
+        this.setState({selectedToken : this.state.votingTokens[e.currentTarget.value]}, this.controller.loadTokenData);
     },
     render() {
         var _this = this;
@@ -65,33 +68,54 @@ var Vote = React.createClass({
         delete props.props;
         return (<section>
             <section className="LEADERSFINALAll">
-                <ul start="1" className="LEADERSFINAL">
-                    {this.state && this.state.items && this.renderItemsList().map(it => <li key={it.key}>
-                        <section className="ObjectRender">
-                            <a>{it.name}</a>
-                            <iframe src={it.external_url} className="PDFVIEW">
-                            </iframe>
-                        </section>
-                        <section className="BigPIPI">
-                            <b>{it.votes}</b>
-                            <p className="BigPIPIVote">Votes</p>
-                            <h6>1 Vote = {window.formatMoney(window.fromDecimals(props.toTransfer, window.votingTokenDecimals))} {window.votingTokenSymbol}</h6>
-                            <h6>Vote Tax = {window.formatMoney(window.fromDecimals(props.singleBurn, window.votingTokenDecimals))} {window.votingTokenSymbol}</h6>
-                            {props.votable && props.voted && !props.voted[0] && props.performing !== ('approve_' + it.tokenId) && <a href="javascript:;" onClick={this.perform} data-action="approve" data-tokenId={it.tokenId} className={"ApproveBTN" + (props.performing || props.votingTokenApproved ? " Disabled" : "")}>Approve {window.votingTokenSymbol}</a>}
-                            {props.performing === ('approve_' + it.tokenId) && <GhostLoader/>}
-                            {props.votable && props.voted && !props.voted[0] && props.performing !== ('vote_' + it.tokenId) && <a href="javascript:;" onClick={e => this.perform(e, it.tokenId)} data-action="vote" data-tokenId={it.tokenId} className={"VoteBTN" + (props.performing || !props.votingTokenApproved || props.voted[0] ? " Disabled" : "")}>Vote</a>}
-                            {props.performing === ('vote_' + it.tokenId) && <GhostLoader/>}
-                            {props.voted && props.voted[0] && props.voted[1] === it.tokenId && !props.redeemed && props.performing !== ('redeem_' + it.tokenId) && <a href="javascript:;" onClick={this.perform} data-action="redeem" data-tokenId={it.tokenId} className={"VoteBTN" + (props.performing ? " Disabled" : "")}>Redeem</a>}
-                            {props.performing === ('redeem_' + it.tokenId) && <GhostLoader/>}
-                            {!_this.started && <h4>
-                                Contest will start at block <a target="_blank" href={window.getNetworkElement("etherscanURL") + "block/countdown/" + this.startBlock}>#{this.startBlock}</a>
-                            </h4>}
-                            {_this.started && !window.walletAddress && <a href="javascript:;" onClick={() => window.ethereum.enable()}>Connect</a>}
-                            <p>Voting in the brand contest is an irreversible action, do it at your own risk. Every time you vote you burn a tax of {window.formatMoney(window.fromDecimals(props.singleBurn, window.votingTokenDecimals))} {window.votingTokenSymbol}. Once you have voted you wouldn't be able to redeem your {window.votingTokenSymbol} until the block <a target="_blank" href={window.getNetworkElement("etherscanURL") + "block/countdown/" + this.endBlock}>#{this.endBlock}</a> <a href="https://github.com/b-u-i-d-l/brand-contest" target="_blank">More info</a></p>
-                        </section>
-                    </li>)}
-                </ul>
-                {!this.state || this.state.loading && <BigLoader message="" />}
+                {this.state && <section>
+                    <section className="Status">
+                        {!this.state.started && <h3>
+                            The survey will start at block <a target="_blank" href={window.getNetworkElement("etherscanURL") + "block/" + this.state.startBlock}>#{this.state.startBlock}</a>
+                        </h3>}
+                        {this.state.terminated && <h3>
+                            The survey has been terminated at block <a target="_blank" href={window.getNetworkElement("etherscanURL") + "block/" + this.state.endBlock}>#{this.state.endBlock}</a>
+                        </h3>}
+                        {this.state.started && <section>
+                            <h3>Votes:</h3>
+                            <h4>{window.fromDecimals(this.state.votes[0], 18)} Accept</h4>
+                            <h4>{window.fromDecimals(this.state.votes[1], 18)} Refuse</h4>
+                            {window.walletAddress && <section>
+                                <h5>My Votes:</h5>
+                                <h6>{window.fromDecimals(this.state.myVotes.accepts.reduce((a, b) => parseInt(a) + parseInt(b)), 18)} Accept</h6>
+                                <h6>{window.fromDecimals(this.state.myVotes.refuses.reduce((a, b) => parseInt(a) + parseInt(b)), 18)} Refuse</h6>
+                            </section>}
+                        </section>}
+                    </section>
+                    {this.state.started && <section className="Actions">
+                        {this.state.running && <section className="Input">
+                            <a href="javascript:;" onClick={this.max}>Max</a>
+                            <input type="text" ref={ref => this.input = ref} />
+                            <select onChange={this.onVotingToken}>
+                                {this.state.votingTokens.map((it, i) => <option key={it.address} value={i} selected={_this.state.selectedToken.address === it.address}>
+                                    {it.name} ({it.symbol})
+                                </option>)}
+                            </select>
+                            <span>Balance: {window.fromDecimals(this.state.balanceOf, this.state.selectedToken.decimals)} {this.state.selectedToken.symbol}</span>
+                        </section>}
+                        {this.state.running && window.walletAddress && <section className="Buttons">
+                            {this.state.performing !== 'approve' && <a className={"" + (this.state.approved ? " Disabled" : "")} href="javascript:;" data-action="approve" onClick={this.perform}>Approve {this.state.selectedToken.symbol}</a>}
+                            {this.state.performing === 'approve' && <GhostLoader />}
+                            {this.state.performing !== 'accept' && <a className={"" + (!this.state.approved || this.state.performing ? " Disabled" : "")} href="javascript:;" data-action="accept" onClick={this.perform}>Accept</a>}
+                            {this.state.performing === 'accept' && <GhostLoader />}
+                            {this.state.performing !== 'refuse' && <a className={"" + (!this.state.approved || this.state.performing ? " Disabled" : "")} href="javascript:;" data-action="refuse" onClick={this.perform}>Refuse</a>}
+                            {this.state.performing === 'refuse' && <GhostLoader />}
+                        </section>}
+                        {this.state.terminated && !this.state.redeemed && <section className="Buttons">
+                            {this.state.performing !== 'redeem' && <a className={"" + (this.state.performing ? " Disabled" : "")} href="javascript:;" data-action="redeem" onClick={this.perform}>Redeem</a>}
+                            {this.state.performing === 'redeem' && <GhostLoader />}
+                        </section>}
+                        {!window.walletAddress && <section className="Buttons">
+                            <a className="" href="javascript:;" onClick={() => window.ethereum.enable().then(this.controller.loadData)}>Connect</a>
+                        </section>}
+                    </section>}
+                </section>}
+                {!this.state && <BigLoader message=""/>}
             </section>
         </section>);
     }
