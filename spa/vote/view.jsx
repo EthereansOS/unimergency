@@ -106,7 +106,7 @@ var Vote = React.createClass({
                             {this.state.performing === 'refuse' && <GhostLoader />}
                         </section>}
                         {!window.walletAddress && <section className="Buttons">
-                            <a className="" href="javascript:;" onClick={() => window.ethereum.enable().then(this.controller.loadData)}>Connect</a>
+                            <a className="APPROVEBTN" href="javascript:;" onClick={() => window.ethereum.enable().then(this.controller.loadData)}>Connect</a>
                         </section>}
                     </section>}
                     {window.walletAddress && <section className="YOURVOTE">
@@ -118,7 +118,7 @@ var Vote = React.createClass({
                         <p>10000 ARTE</p>
                         <p>You'll be able to redeem your tokens here at <a target="_blank" href={window.getNetworkElement("etherscanURL") + "block/" + this.state.endBlock}>the end of the Proposal</a></p>
                         {this.state.terminated && !this.state.redeemed && <section className="Buttons">
-                            {this.state.performing !== 'redeem' && <a className={"" + (this.state.performing ? " Disabled" : "")} href="javascript:;" data-action="redeem" onClick={this.perform}>Redeem</a>}
+                            {this.state.performing !== 'redeem' && <a className={"APPROVEBTN" + (this.state.performing ? " Disabled" : "")} href="javascript:;" data-action="redeem" onClick={this.perform}>Redeem</a>}
                             {this.state.performing === 'redeem' && <GhostLoader />}
                         </section>}
                     </section>}
