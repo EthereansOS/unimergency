@@ -19,7 +19,7 @@
     "votingTokenAddress": "0x7b123f53421b1bF8533339BFBdc7C98aA94163db",
     "votingTokenAddressRopsten" : "0x5873Fae0Eb15C27C5724ddd10651e8E3901C89F2",
     "quickscopeVoteAddress" : "0x963967dCBCa24F789f6255cF7F3445f6ef40515b",
-    "quickscopeVoteAddressRopsten" : "0xA98EC4Bfe6E6A3243FD9DD2842037eE17438f6Bc",
+    "quickscopeVoteAddressRopsten" : "0x30550bE3b9BbE1240C0155f7587C33D835398853",
     "trustwalletImgURLTemplate": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/{0}/logo.png",
     "deploySearchStart": 8180355,
     "deploySearchStartRopsten": 8180355,

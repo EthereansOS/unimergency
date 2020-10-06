@@ -190,3 +190,5 @@ a {cursor: pointer !important;}
 .VTNBTN {display: inline-block; width: 103px; margin: 10px 4px;background-color: rgb(255, 0, 122);color: white !important;cursor: auto;box-shadow: none;border: 1px solid transparent;outline: none;opacity: 1;padding: 18px;border-radius: 12px;font-weight: 500; text-decoration: none;}
 
 .Disabled {background-color: rgb(237, 238, 242);color: rgb(136, 141, 155) !important;}
+
+.GiGiELaCremeria {color: #787878; margin: 30px auto; font-size: 19px;}

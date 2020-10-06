@@ -5,7 +5,7 @@ var Vote = React.createClass({
     ],
     getDefaultSubscriptions() {
         return {
-            'ethereum/update': () => this.controller.loadData()
+            'ethereum/ping': () => this.controller.loadData()
         };
     },
     componentDidMount() {
@@ -66,6 +66,9 @@ var Vote = React.createClass({
         this.state && Object.entries(this.state).forEach(entry => props[entry[0]] = entry[1]);
         props.props && Object.entries(props.props).forEach(entry => props[entry[0]] = entry[1]);
         delete props.props;
+        if(!window.ethereum) {
+            return (<h5 className="GiGiELaCremeria">Log into the web3 to enter</h5>);
+        }
         return (<section>
             <section className="LEADERSFINALAll">
                 {this.state && <section>
@@ -82,24 +85,24 @@ var Vote = React.createClass({
                         </h2>}
                         {this.state.started && <section className="YOURVOTE">
                             <h3>Status:</h3>
-                            <h4>{window.fromDecimals(this.state.votes[0], 18)} Accept</h4>
-                            <h4>{window.fromDecimals(this.state.votes[1], 18)} Refuse</h4>
+                            <h4>{window.fromDecimals(this.state.votes[0], 18).split('.')[0]} Accept</h4>
+                            <h4>{window.fromDecimals(this.state.votes[1], 18).split('.')[0]} Refuse</h4>
                         </section>}
                     </section>
-                    {this.state.started && <section className="Actions YOURVOTE">
+                    {this.state.started && (this.state.running || !window.walletAddress) && <section className="Actions YOURVOTE">
                         {this.state.running && <section className="Input">
                             <a href="javascript:;" onClick={this.max}>Max</a>
                             <input type="text" ref={ref => this.input = ref} />
                             <select onChange={this.onVotingToken}>
                                 {this.state.votingTokens.map((it, i) => <option key={it.address} value={i} selected={_this.state.selectedToken.address === it.address}>
-                                    {it.name} ({it.symbol})
+                                    {it.symbol}
                                 </option>)}
                             </select>
                             <span>Balance: {window.fromDecimals(this.state.balanceOf, this.state.selectedToken.decimals)} {this.state.selectedToken.symbol}</span>
                         </section>}
                         {this.state.running && window.walletAddress && <section className="Buttons">
                             {this.state.performing !== 'approve' && <a className={"APPROVEBTN" + (this.state.approved ? " Disabled" : "")} href="javascript:;" data-action="approve" onClick={this.perform}>Approve {this.state.selectedToken.symbol}</a>}
-                            {this.state.performing === 'approve' && <GhostLoader />}
+                            {this.state.performing === 'approve' && <div><GhostLoader /></div>}
                             {this.state.performing !== 'accept' && <a className={"VTNBTN" + (!this.state.approved || this.state.performing ? " Disabled" : "")} href="javascript:;" data-action="accept" onClick={this.perform}>Accept</a>}
                             {this.state.performing === 'accept' && <GhostLoader />}
                             {this.state.performing !== 'refuse' && <a className={"VTNBTN" + (!this.state.approved || this.state.performing ? " Disabled" : "")} href="javascript:;" data-action="refuse" onClick={this.perform}>Refuse</a>}
@@ -109,15 +112,15 @@ var Vote = React.createClass({
                             <a className="APPROVEBTN" href="javascript:;" onClick={() => window.ethereum.enable().then(this.controller.loadData)}>Connect</a>
                         </section>}
                     </section>}
-                    {window.walletAddress && <section className="YOURVOTE">
+                    {window.walletAddress && this.state.voted && <section className="YOURVOTE">
                         <h5>Your Votes:</h5>
-                        <h6>{window.fromDecimals(this.state.myVotes.accepts.reduce((a, b) => parseInt(a) + parseInt(b)), 18)} Accept</h6>
-                        <h6>{window.fromDecimals(this.state.myVotes.refuses.reduce((a, b) => parseInt(a) + parseInt(b)), 18)} Refuse</h6>
-                        <p>10 BUIDL</p>
-                        <p>100 UniFi</p>
-                        <p>10000 ARTE</p>
+                        <h6>{window.fromDecimals(this.state.myVotes.accepts.length === 0 ? '0' : this.state.myVotes.accepts.reduce((a, b) => parseInt(a) + parseInt(b)), 18).split('.')[0]} Accept</h6>
+                        <h6>{window.fromDecimals(this.state.myVotes.refuses.length === 0 ? '0' : this.state.myVotes.refuses.reduce((a, b) => parseInt(a) + parseInt(b)), 18).split('.')[0]} Refuse</h6>
+                        {this.state.votingTokens.map((it, i) => <p key={it.address}>
+                            {window.fromDecimals(parseInt(_this.state.myVotes.accepts[i]) + parseInt(_this.state.myVotes.refuses[i]), it.decimals)} {it.symbol}
+                        </p>)}
                         <p>You'll be able to redeem your tokens here at <a target="_blank" href={window.getNetworkElement("etherscanURL") + "block/" + this.state.endBlock}>the end of the Proposal</a></p>
-                        {this.state.terminated && !this.state.redeemed && <section className="Buttons">
+                        {this.state.terminated && !this.state.redeemed && window.walletAddress && <section className="Buttons">
                             {this.state.performing !== 'redeem' && <a className={"APPROVEBTN" + (this.state.performing ? " Disabled" : "")} href="javascript:;" data-action="redeem" onClick={this.perform}>Redeem</a>}
                             {this.state.performing === 'redeem' && <GhostLoader />}
                         </section>}

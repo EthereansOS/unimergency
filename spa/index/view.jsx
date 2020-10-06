@@ -50,7 +50,6 @@ var Index = React.createClass({
                     <ul className="Menu">
                         <a href="javascript:;" className="MInfoSelector selected" onClick={this.onClick}>Proposal</a>
                         <a href="javascript:;" className="MInfoSelector" onClick={this.onClick}>Vote</a>
-                        
                     </ul>
                 </section>
                 <section className="ActionSection">

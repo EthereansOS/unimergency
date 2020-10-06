@@ -3,6 +3,9 @@ var VoteController = function (view) {
     context.view = view;
 
     context.loadData = async function loadData() {
+        if(!window.ethereum) {
+            return;
+        }
         var voteContract = window.newContract(window.context.QuickscopeVoteABI, window.getNetworkElement("quickscopeVoteAddress"));
         var votes = await window.blockchainCall(voteContract.methods.votes);
         var myVotes = {
@@ -10,11 +13,13 @@ var VoteController = function (view) {
             refuses : []
         };
         var redeemed = false;
+        var voted = false;
         if(window.walletAddress) {
             myVotes = await window.blockchainCall(voteContract.methods.votes, window.walletAddress);
             myVotes.accepts = myVotes[0];
             myVotes.refuses = myVotes[1];
             redeemed = await window.blockchainCall(voteContract.methods.redeemed, window.walletAddress);
+            voted = myVotes.accepts.reduce((a,b) => parseInt(a) + parseInt(b)) + myVotes.refuses.reduce((a,b) => parseInt(a) + parseInt(b)) > 0;
         }
         var currentBlock = await window.web3.eth.getBlockNumber();
         var startBlock = await window.blockchainCall(voteContract.methods.startBlock);
@@ -40,6 +45,7 @@ var VoteController = function (view) {
             terminated,
             running,
             votingTokens,
+            voted,
             selectedToken
         }, () => context.loadTokenData());
     };
@@ -51,16 +57,24 @@ var VoteController = function (view) {
             refuses : []
         };
         var redeemed = false;
+        var voted = false;
         if(window.walletAddress) {
             myVotes = await window.blockchainCall(context.view.state.voteContract.methods.votes, window.walletAddress);
             myVotes.accepts = myVotes[0];
             myVotes.refuses = myVotes[1];
             redeemed = await window.blockchainCall(context.view.state.voteContract.methods.redeemed, window.walletAddress);
+            voted = myVotes.accepts.reduce((a,b) => parseInt(a) + parseInt(b)) + myVotes.refuses.reduce((a,b) => parseInt(a) + parseInt(b)) > 0;
         }
+        var currentBlock = await window.web3.eth.getBlockNumber();
+        var startBlock = await window.blockchainCall(context.view.state.voteContract.methods.startBlock);
+        var endBlock = await window.blockchainCall(context.view.state.voteContract.methods.endBlock);
+        var started = currentBlock >= parseInt(startBlock);
+        var terminated = currentBlock >= parseInt(endBlock);
+        var running = started && !terminated;
         var balanceOf = await window.blockchainCall(context.view.state.selectedToken.token.methods.balanceOf, window.walletAddress);
         var allowance = await window.blockchainCall(context.view.state.selectedToken.token.methods.allowance, window.walletAddress, context.view.state.voteContract.options.address);
         var approved = parseInt(allowance) >= parseInt(balanceOf);
-        context.view.setState({votes, myVotes, balanceOf, redeemed, approved});
+        context.view.setState({votes, myVotes, currentBlock, startBlock, endBlock, started, terminated, running, balanceOf, redeemed, votes, approved});
     }
 
     context.performApprove = async function performApprove() {
