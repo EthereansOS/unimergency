@@ -17,11 +17,8 @@ function Boot() {
     }
     ReactModuleLoader.load({
         modules: ['spa/' + pathName],
-        scripts: ['spa/bigLoader.jsx'],
+        scripts: ['spa/style.min.css', 'spa/script.min.js'],
         callback : function() {
-            React.defaultLoader = function() {
-                return React.createElement(BigLoader);
-            };
             ReactDOM.render(React.createElement(window[pathName.firstLetterToUpperCase()], props), document.body, callback);
         }
     });
