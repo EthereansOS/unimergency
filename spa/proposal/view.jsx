@@ -2,9 +2,81 @@ var Proposal = React.createClass({
     requiredScripts: [
         'spa/bigLoader.jsx'
     ],
+    getDefaultSubscriptions() {
+        return {
+            'ethereum/ping': () => this.controller.loadData()
+        };
+    },
+    componentDidMount() {
+        this.controller.loadData();
+    },
+    perform(e) {
+        e && e.preventDefault && e.preventDefault(true) && e.stopPropagation && e.stopPropagation(true);
+        var target = e.currentTarget;
+        if ((this.state && this.state.performing) || target.className.indexOf('Disabled') !== -1) {
+            return;
+        }
+        var action = target.dataset.action;
+        var args = [];
+        for (var i = 1; i < arguments.length; i++) {
+            args.push(arguments[i]);
+        }
+        var _this = this;
+        var close = function close(e) {
+            var message = e && (e.message || e);
+            _this.setState({ performing: null }, function () {
+                message && message.indexOf('denied') === -1 && setTimeout(function () {
+                    alert(message);
+                });
+                !message && _this.controller.loadTokenData();
+            });
+        }
+        _this.setState({ performing: action }, function () {
+            _this.controller['perform' + action.firstLetterToUpperCase()].apply(this, args).catch(close).finally(close);
+        });
+    },
     render() {
+        var _this = this;
         return (
             <section>
+                {this.state && <section className="LEADERSFINALAll">
+                    <section>
+                        <section className="Status">
+                            {!this.state.started && <h2>
+                                The survey will start at block <a target="_blank" href={window.getNetworkElement("etherscanURL") + "block/" + this.state.startBlock}>#{this.state.startBlock}</a>
+                            </h2>}
+                            {this.state.terminated && <h2>
+                                The survey has been terminated at block <a target="_blank" href={window.getNetworkElement("etherscanURL") + "block/" + this.state.endBlock}>#{this.state.endBlock}</a>
+                            </h2>}
+                            {this.state.running && <h2>
+                                End Block: <a target="_blank" href={window.getNetworkElement("etherscanURL") + "block/" + this.state.endBlock}>#{this.state.endBlock}</a>
+                            </h2>}
+                            {this.state.started && <section className="YOURVOTE">
+                                <h3>Status:</h3>
+                                <h4>{window.fromDecimals(this.state.votes[0], 18).split('.')[0]} Accept</h4>
+                                <h4>{window.fromDecimals(this.state.votes[1], 18).split('.')[0]} Refuse</h4>
+                            </section>}
+                        </section>
+                        {!window.walletAddress && <section className="Actions YOURVOTE">
+                            <section className="Buttons">
+                                <a className="APPROVEBTN" href="javascript:;" onClick={() => window.ethereum.enable().then(this.controller.loadData)}>Connect</a>
+                            </section>
+                        </section>}
+                        {window.walletAddress && this.state.voted && <section className="YOURVOTE">
+                            <h5>Your Votes:</h5>
+                            <h6>{window.fromDecimals(this.state.myVotes.accepts.length === 0 ? '0' : this.state.myVotes.accepts.reduce((a, b) => parseInt(a) + parseInt(b)), 18).split('.')[0]} Accept</h6>
+                            <h6>{window.fromDecimals(this.state.myVotes.refuses.length === 0 ? '0' : this.state.myVotes.refuses.reduce((a, b) => parseInt(a) + parseInt(b)), 18).split('.')[0]} Refuse</h6>
+                            {this.state.votingTokens.map((it, i) => <p key={it.address}>
+                                {window.fromDecimals(parseInt(_this.state.myVotes.accepts[i]) + parseInt(_this.state.myVotes.refuses[i]), it.decimals)} {it.symbol}
+                            </p>)}
+                            <p>You'll be able to redeem your tokens here at <a target="_blank" href={window.getNetworkElement("etherscanURL") + "block/" + this.state.endBlock}>the end of the Proposal</a></p>
+                            {this.state.terminated && !this.state.redeemed && window.walletAddress && <section className="Buttons">
+                                {this.state.performing !== 'redeem' && <a className={"APPROVEBTN" + (this.state.performing ? " Disabled" : "")} href="javascript:;" data-action="redeem" onClick={this.perform}>Redeem</a>}
+                                {this.state.performing === 'redeem' && <GhostLoader />}
+                            </section>}
+                        </section>}
+                    </section>
+                </section>}
                 <section className="ExpTop">
                     <h1>To Our Dear DFOhub Community</h1>
                     <section className="ExpPar">
@@ -148,46 +220,46 @@ var Proposal = React.createClass({
                     <section className="ExpPar ExpParV">
                         <p>BUIDL-ETH Tier</p>
                         <ul>
-                        <p>If reward is chosen in <b>BUIDL</b></p>
-                        <li><p>- 30% reward</p></li>
-                        <li><p>- 36,000 BUIDL total reward</p></li>
-                        <li><p>- 120,000 BUIDL max staked simultaneously</p></li>
+                            <p>If reward is chosen in <b>BUIDL</b></p>
+                            <li><p>- 30% reward</p></li>
+                            <li><p>- 36,000 BUIDL total reward</p></li>
+                            <li><p>- 120,000 BUIDL max staked simultaneously</p></li>
                         </ul>
                         <ul>
-                        <p>If reward is chosen in <b>UniFi</b></p>
-                        <li><p>- 50% reward</p></li>
-                        <li><p>- 50,000 UniFi total reward</p></li>
-                        <li><p>- 100,000 BUIDL max staked simultaneously</p></li>
+                            <p>If reward is chosen in <b>UniFi</b></p>
+                            <li><p>- 50% reward</p></li>
+                            <li><p>- 50,000 UniFi total reward</p></li>
+                            <li><p>- 100,000 BUIDL max staked simultaneously</p></li>
                         </ul>
                     </section>
                     <section className="ExpPar ExpParV">
                         <p>UniFi-ETH Tier</p>
                         <ul>
-                        <p>If reward is chosen in <b>UniFi</b></p>
-                        <li><p>- 50% reward</p></li>
-                        <li><p>- 50,000 UniFi total reward</p></li>
-                        <li><p>- 100,000 UniFi max staked simultaneously</p></li>
+                            <p>If reward is chosen in <b>UniFi</b></p>
+                            <li><p>- 50% reward</p></li>
+                            <li><p>- 50,000 UniFi total reward</p></li>
+                            <li><p>- 100,000 UniFi max staked simultaneously</p></li>
                         </ul>
                         <ul>
-                        <p>If reward is chosen in <b>BUIDL</b></p>
-                        <li><p>- 30% reward</p></li>
-                        <li><p>- 30,000 BUIDL total reward</p></li>
-                        <li><p>- 100,000 UniFi max staked simultaneously</p></li>
+                            <p>If reward is chosen in <b>BUIDL</b></p>
+                            <li><p>- 30% reward</p></li>
+                            <li><p>- 30,000 BUIDL total reward</p></li>
+                            <li><p>- 100,000 UniFi max staked simultaneously</p></li>
                         </ul>
                     </section>
                     <section className="ExpPar ExpParV">
                         <p>uSD-USDC / uSD-DAI Tiers</p>
                         <ul>
-                        <p>If reward is chosen in <b>BUIDL</b></p>
-                        <li><p>- 15% reward</p></li>
-                        <li><p>- 15,000 BUIDL total reward</p></li>
-                        <li><p>- 100,000 uSD max staked simultaneously</p></li>
+                            <p>If reward is chosen in <b>BUIDL</b></p>
+                            <li><p>- 15% reward</p></li>
+                            <li><p>- 15,000 BUIDL total reward</p></li>
+                            <li><p>- 100,000 uSD max staked simultaneously</p></li>
                         </ul>
                         <ul>
-                        <p>If reward is chosen in <b>UniFi</b></p>
-                        <li><p>- 25% reward</p></li>
-                        <li><p>- 37,500 UniFi total reward</p></li>
-                        <li><p>- 150,000 uSD max staked simultaneously</p></li>
+                            <p>If reward is chosen in <b>UniFi</b></p>
+                            <li><p>- 25% reward</p></li>
+                            <li><p>- 37,500 UniFi total reward</p></li>
+                            <li><p>- 150,000 uSD max staked simultaneously</p></li>
                         </ul>
                     </section>
                     <section className="ExpPar">
@@ -207,7 +279,7 @@ var Proposal = React.createClass({
                     <section className="ExpPar">
                         <p>Each token = one vote (1 BUIDL = 1 vote; 1 ARTE = 1 vote; 1 UniFi = 1 vote). When the end block ends, if the majority of staked tokens vote YES, the DFOhub team will immediately begin implementing the strategy to free us from Uniswap’s black hole once and for all.</p>
                     </section>
-                    
+
                     <h2>An Important Message From Ale</h2>
 
                     <section className="ExpPar">

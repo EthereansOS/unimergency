@@ -142,6 +142,7 @@ var ReactModuleManager = function() {
             if (reactClass.prototype.oldComponentDidMount === undefined) {
                 reactClass.prototype.oldComponentDidMount = reactClass.prototype.componentDidMount
                 reactClass.prototype.componentDidMount = function componentDidMount() {
+                    this.mounted = true;
                     if(requireCalled === false) {
                         return;
                     }
@@ -173,11 +174,6 @@ var ReactModuleManager = function() {
                     cancelTimeout(queueElementId);
                 }
             }
-            if (reactClass.prototype.hasOwnProperty('parentComponent') === undefined) {
-                reactClass.prototype.__defineGetter__('parentComponent', function parentComponent() {
-                    return this.domRoot && this.domRoot[0].parentElement.reactComponent;
-                });
-            }
             if (typeof jQuery !== 'undefined' && jQuery.publish) {
                 if (reactClass.prototype.oldComponentWillUnmount === undefined) {
                     reactClass.prototype.oldComponentWillUnmount = reactClass.prototype.componentWillUnmount
@@ -186,6 +182,7 @@ var ReactModuleManager = function() {
                         if (this.oldComponentWillUnmount !== undefined && this.oldComponentWillUnmount !== null) {
                             this.oldComponentWillUnmount.apply(this);
                         }
+                        delete this.mounted;
                     }
                 }
                 if (reactClass.prototype.subscribe === undefined) {
@@ -268,21 +265,19 @@ var ReactModuleManager = function() {
     return {
         createElement: function(viewName) {
             return createElementInternal({
-                viewName: viewName,
-                createNew: false,
+                viewName,
                 arguments: arguments
             })
         },
         createElementNew: function(viewName) {
             return createElementInternal({
-                viewName: viewName,
+                viewName,
                 createNew: true,
                 arguments: arguments
             })
         }
     }
-}();
-HTMLElement.prototype.__defineGetter__('reactComponent', function reactComponent() { var elem = this; while (elem) { if (elem.reactInstance) { return elem.reactInstance; }elem = elem.parentNode; } });
+}()
 React.defaultLoader = function() {
     return React.createElement('span', {}, 'Loading...');
 };

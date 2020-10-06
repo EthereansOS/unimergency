@@ -3,7 +3,7 @@ window.voidEthereumAddressExtended = '0x0000000000000000000000000000000000000000
 window.descriptionWordLimit = 300;
 window.urlRegex = new RegExp("(https?:\\/\\/[^\s]+)", "gs");
 window.solidityImportRule = new RegExp("import( )+\"(\\d+)\"( )*;", "gs");
-window.pragmaSolidityRule = new RegExp("pragma( )+solidity( )*(\\^|>)\\d+.\\d+.\\d+;","gs");
+window.pragmaSolidityRule = new RegExp("pragma( )+solidity( )*(\\^|>)\\d+.\\d+.\\d+;", "gs");
 window.base64Regex = new RegExp("data:([\\S]+)\\/([\\S]+);base64", "gs");
 
 window.Main = async function Main() {
@@ -43,17 +43,15 @@ window.loadDFO = async function loadDFO(address, allAddresses) {
 
     try {
         votingToken = (await window.blockchainCall(dfo.methods.getDelegates))[0];
-    } catch(e) {
-    }
+    } catch (e) {}
 
-    if(votingToken === window.voidEthereumAddress) {
+    if (votingToken === window.voidEthereumAddress) {
         try {
             votingToken = await window.blockchainCall(dfo.methods.getToken);
-        } catch (e) {
-        }
+        } catch (e) {}
     }
 
-    if(votingToken === window.voidEthereumAddress) {
+    if (votingToken === window.voidEthereumAddress) {
         var logs = await window.getLogs({
             address,
             topics: [
@@ -73,12 +71,12 @@ window.getLogs = async function(a, endOnFirstResult) {
     args.fromBlock = args.fromBlock || (window.getNetworkElement('deploySearchStart') + '');
     args.toBlock = args.toBlock || (await window.web3.eth.getBlockNumber() + '');
     var to = parseInt(args.toBlock);
-    while(parseInt(args.fromBlock) <= to) {
+    while (parseInt(args.fromBlock) <= to) {
         var newTo = parseInt(args.fromBlock) + window.context.blockSearchSection;
         newTo = newTo <= to ? newTo : to;
         args.toBlock = newTo + '';
         logs.push(...(await window.web3.eth.getPastLogs(args)));
-        if(logs.length > 0 && endOnFirstResult === true) {
+        if (logs.length > 0 && endOnFirstResult === true) {
             return logs;
         }
         args.fromBlock = (parseInt(args.toBlock) + 1) + '';
@@ -110,12 +108,15 @@ window.onEthereumUpdate = function onEthereumUpdate(millis) {
                 window.votingTokenSymbol = await window.blockchainCall(window.votingToken.methods.symbol);
                 window.votingTokenDecimals = await window.blockchainCall(window.votingToken.methods.decimals);
                 delete window.renderItemsPromise;
+                window.uniswapV2Router = window.newContract(window.context.UniswapV2RouterABI, window.context.uniswapV2RouterAddress);
+                window.wethToken = window.newContract(window.context.VotingTokenABI, window.wethAddress = window.web3.utils.toChecksumAddress(await window.blockchainCall(window.uniswapV2Router.methods.WETH)));
+                window.uniswapV2Factory = window.newContract(window.context.UniswapV2FactoryABI, window.context.uniswapV2FactoryAddress);
                 window.loadTokenExclusions();
                 update = true;
             }
             delete window.walletAddress;
             try {
-                window.walletAddress = (await window.web3.eth.getAccounts())[0];
+                window.walletAddress = window.web3.utils.toChecksumAddress((await window.web3.eth.getAccounts())[0]);
             } catch (e) {}
             update && $.publish('ethereum/update');
             $.publish('ethereum/ping');
@@ -126,16 +127,16 @@ window.onEthereumUpdate = function onEthereumUpdate(millis) {
 
 window.loadTokenExclusions = function loadTokenExclusions() {
     window.voteExclusionsByToken = JSON.parse(JSON.stringify(window.context.voteExclusionsByToken));
-    if(window.voteExclusionsByToken.arte) {
-        for(var key of Object.keys(window.voteExclusionsByToken.arte)) {
-            for(var i = 0; i < window.voteExclusionsByToken.arte[key]; i++) {
+    if (window.voteExclusionsByToken.arte) {
+        for (var key of Object.keys(window.voteExclusionsByToken.arte)) {
+            for (var i = 0; i < window.voteExclusionsByToken.arte[key]; i++) {
                 window.voteExclusionsByToken.arte[key][i] = window.web3.utils.toChecksumAddress(window.voteExclusionsByToken.arte[key][i]);
             }
         }
     }
-    if(window.voteExclusionsByToken.etra) {
-        for(var key of Object.keys(window.voteExclusionsByToken.etra)) {
-            for(var i = 0; i < window.voteExclusionsByToken.etra[key]; i++) {
+    if (window.voteExclusionsByToken.etra) {
+        for (var key of Object.keys(window.voteExclusionsByToken.etra)) {
+            for (var i = 0; i < window.voteExclusionsByToken.etra[key]; i++) {
                 window.voteExclusionsByToken.etra[key][i] = window.web3.utils.toChecksumAddress(window.voteExclusionsByToken.etra[key][i]);
             }
         }
@@ -212,7 +213,7 @@ window.getData = function getData(root, checkValidation) {
         !input.type || input.type === 'hidden' && (data[id] = $(input).val());
         input.type === 'file' && (data[id] = input.files);
         if (checkValidation || input.dataset.mandatory === 'true') {
-            if (!data[id] || 
+            if (!data[id] ||
                 (input.type === 'number' && isNaN(data[id])) ||
                 (input.type === 'file' && data[id].length === 0)) {
                 throw id.firstLetterToUpperCase() + " is mandatory";
@@ -237,7 +238,7 @@ window.setData = function setData(root, data) {
 };
 
 window.getAddress = async function getAddress() {
-    if(!window.ethereum) {
+    if (!window.ethereum) {
         return;
     }
     await window.ethereum.enable();
@@ -358,7 +359,7 @@ window.loadFunctionalities = function loadFunctionalities(element, callback, ifN
         try {
             element.functionalityNames = JSON.parse(await blockchainCall(element.functionalitiesManager.methods.functionalityNames));
             callback && callback();
-        } catch(e) {
+        } catch (e) {
             element.functionalityNames = [];
         }
         var functionalitiesJSON = await blockchainCall(element.functionalitiesManager.methods.functionalitiesToJSON);
@@ -435,12 +436,12 @@ window.indexMain = function indexMain() {
 window.fromDecimals = function fromDecimals(n, d) {
     n = (n && n.value || n);
     d = (d && d.value || d);
-    if(!n || !d) {
+    if (!n || !d) {
         return "0";
     }
     var decimals = (typeof d).toLowerCase() === 'string' ? parseInt(d) : d;
     var symbol = window.toEthereumSymbol(decimals);
-    if(symbol) {
+    if (symbol) {
         return window.web3.utils.fromWei((typeof n).toLowerCase() === 'string' ? n : window.numberToString(n), symbol);
     }
     var number = (typeof n).toLowerCase() === 'string' ? parseInt(n) : n;
@@ -454,12 +455,12 @@ window.fromDecimals = function fromDecimals(n, d) {
 window.toDecimals = function toDecimals(n, d) {
     n = (n && n.value || n);
     d = (d && d.value || d);
-    if(!n || !d) {
+    if (!n || !d) {
         return "0";
     }
     var decimals = (typeof d).toLowerCase() === 'string' ? parseInt(d) : d;
     var symbol = window.toEthereumSymbol(decimals);
-    if(symbol) {
+    if (symbol) {
         return window.web3.utils.toWei((typeof n).toLowerCase() === 'string' ? n : window.numberToString(n), symbol);
     }
     var number = (typeof n).toLowerCase() === 'string' ? parseInt(n) : n;
@@ -543,7 +544,7 @@ window.split = async function split(content, length, callback) {
         var data = content;
         await new Promise(function(ok) {
             var loop = function() {
-                if(data.length === 0) {
+                if (data.length === 0) {
                     return ok(inputs);
                 }
                 var length = 2 + (data.length * 2);
@@ -586,7 +587,7 @@ window.numberToString = function numberToString(num, locale) {
     if (num === undefined || num === null) {
         num = 0;
     }
-    if((typeof num).toLowerCase() === 'string') {
+    if ((typeof num).toLowerCase() === 'string') {
         return num;
     }
     let numStr = String(num);
@@ -719,15 +720,15 @@ window.extractHTMLDescription = function extractHTMLDescription(code, updateFirs
 
 window.searchForCodeErrors = async function searchForCodeErrors(location, code, codeName, methodSignature, replaces, noCode) {
     var knownFunctionalities = {
-        "getMinimumBlockNumberForSurvey" : true,
-        "getMinimumBlockNumberForEmergencySurvey" : true,
-        "getEmergencySurveyStaking" : true,
-        "getQuorum" : true,
-        "getSurveySingleReward" : true,
-        "getSurveyMinimumStaking" : true,
-        "getIndex" : true,
-        "getLink" : true,
-        "getVotesHardCap" : true
+        "getMinimumBlockNumberForSurvey": true,
+        "getMinimumBlockNumberForEmergencySurvey": true,
+        "getEmergencySurveyStaking": true,
+        "getQuorum": true,
+        "getSurveySingleReward": true,
+        "getSurveyMinimumStaking": true,
+        "getIndex": true,
+        "getLink": true,
+        "getVotesHardCap": true
     };
     var errors = [];
     var comments = code ? window.extractComment(code) : {};
@@ -1028,9 +1029,9 @@ window.toEthereumSymbol = function toEthereumSymbol(decimals) {
     };
     var d = "1" + (new Array(decimals + 1)).join('0');
     var values = Object.entries(symbols);
-    for(var i in values) {
+    for (var i in values) {
         var symbol = values[i];
-        if(symbol[1] === d) {
+        if (symbol[1] === d) {
             return symbol[0];
         }
     }
@@ -1048,7 +1049,7 @@ window.shortenWord = function shortenWord(word, charsAmount) {
 };
 
 window.toggleWordPanel = function(panel, word, charsAmount) {
-    if(!panel || !word) {
+    if (!panel || !word) {
         return;
     }
     var onClick = function onClick(e) {
@@ -1080,8 +1081,7 @@ window.toStateHolderKey = function stateHolderKey(a, b, c) {
     b !== undefined && b !== null && (typeof b).toLowerCase() !== 'string' && (b = '' + b);
     c !== undefined && c !== null && (typeof b).toLowerCase() !== 'string' && (c = '' + c);
     return [
-        a,
-        !a || !b ? "" : "_",
+        a, !a || !b ? "" : "_",
         b,
         (!a && !b) || !c ? "" : "_",
         c
@@ -1100,8 +1100,7 @@ window.AJAXRequest = function AJAXRequest(link, timeout, toU) {
                     var response = xmlhttp.responseText;
                     try {
                         response = JSON.parse(response);
-                    } catch(e) {
-                    }
+                    } catch (e) {}
                     ok(response);
                 }
                 try {
@@ -1112,14 +1111,14 @@ window.AJAXRequest = function AJAXRequest(link, timeout, toU) {
             }
         }
         xmlhttp.onloadend = function onloadend() {
-            if(xmlhttp.status == 404) {
+            if (xmlhttp.status == 404) {
                 return ko(404);
             }
         };
         xmlhttp.open(toUpload ? 'POST' : 'GET', link + (link.indexOf('?') === -1 ? '?' : '&') + ('cached_' + new Date().getTime()) + '=' + (new Date().getTime()), true);
         try {
             toUpload ? xmlhttp.send(toUpload) : xmlhttp.send();
-        } catch(e) {
+        } catch (e) {
             return ko(e);
         }
         (timeout !== undefined && timeout !== null) && setTimeout(function() {
@@ -1138,9 +1137,9 @@ window.AJAXRequest = function AJAXRequest(link, timeout, toU) {
 };
 
 window.checkCoverSize = function checkCoverSize(cover) {
-    return new Promise(function (ok) {
+    return new Promise(function(ok) {
         var reader = new FileReader();
-        reader.addEventListener("load", function () {
+        reader.addEventListener("load", function() {
             var image = new Image();
             image.onload = function onload() {
                 return ok(image.width === image.height && image.width === 350);
@@ -1154,65 +1153,63 @@ window.checkCoverSize = function checkCoverSize(cover) {
 window.uploadToIPFS = async function uploadToIPFS(files) {
     var single = !(files instanceof Array);
     files = single ? [files] : files;
-    for(var i in files) {
+    for (var i in files) {
         var file = files[i];
-        if(!(file instanceof File) && !(file instanceof Blob)) {
-            files[i] = new Blob([JSON.stringify(files[i], null, 4)], {type: "application/json"});
+        if (!(file instanceof File) && !(file instanceof Blob)) {
+            files[i] = new Blob([JSON.stringify(files[i], null, 4)], { type: "application/json" });
         }
     }
     var hashes = [];
     window.api = window.api || new IpfsHttpClient(window.context.ipfsHost);
-    for await(var upload of window.api.add(files)) {
+    for await (var upload of window.api.add(files)) {
         hashes.push(window.context.ipfsUrlTemplate + upload.path);
     }
     return single ? hashes[0] : hashes;
 };
 
 window.loadItems = async function loadItems(context, list, dontClear, singleItem) {
-    if(!list || list.length === 0 || (context.view.state && context.view.state.loading)) {
+    if (!list || list.length === 0 || (context.view.state && context.view.state.loading)) {
         return;
     }
     var currentBlock = parseInt(await window.web3.eth.getBlockNumber());
     var endBlock = parseInt(await window.blockchainCall(window.contest.methods.getSurveyEndBlock));
     var redeemable = currentBlock >= endBlock;
     redeemable && await window.getAddress();
-    context.view.setState({loading : true});
-    dontClear !== true && context.view.setState({items : []});
+    context.view.setState({ loading: true });
+    dontClear !== true && context.view.setState({ items: [] });
     var items = [];
-    for(var element of list) {
+    for (var element of list) {
         var split = element.split('_');
         var artist = window.web3.utils.toChecksumAddress(split[4]);
         var token = window.newContract(window.context.ERC721ABI, split[2]);
         var item = {
-            key : element.substring(element.indexOf("_", element.indexOf("_") + 1) + 1),
+            key: element.substring(element.indexOf("_", element.indexOf("_") + 1) + 1),
             token,
             votes: split[0],
-            eths : window.fromDecimals(split[1], 18),
-            tokenId : split[3],
+            eths: window.fromDecimals(split[1], 18),
+            tokenId: split[3],
             artist,
             redeemable,
             canRedeem: redeemable && window.walletAddress === artist,
             ticker: await window.blockchainCall(token.methods.symbol),
-            metadataLink : await window.blockchainCall(token.methods.tokenURI, split[3]),
-            openSeaLink : window.context.openSeaURL + token.options.address + '/' + split[3],
-            etherscanLink : window.getNetworkElement('etherscanURL') + 'token/' + token.options.address + '?a=' + split[3]
+            metadataLink: await window.blockchainCall(token.methods.tokenURI, split[3]),
+            openSeaLink: window.context.openSeaURL + token.options.address + '/' + split[3],
+            etherscanLink: window.getNetworkElement('etherscanURL') + 'token/' + token.options.address + '?a=' + split[3]
         };
         var metadata = {};
         try {
             metadata = await window.AJAXRequest(item.metadataLink.split('ipfs://').join('//gateway.ipfs.io/'));
-        } catch(e) {
-        }
+        } catch (e) {}
         Object.keys(metadata).forEach(key => item[key] = metadata[key]);
         Object.keys(item).forEach(key => {
             try {
                 item[key] = item[key].split('ipfs://').join('//gateway.ipfs.io/');
-            } catch(e) {
-            }
+            } catch (e) {}
         });
         items.push(item);
-        singleItem === true && context.view.setState({items});
+        singleItem === true && context.view.setState({ items });
     }
-    context.view.setState({loading : false, items});
+    context.view.setState({ loading: false, items });
     return items;
 };
 
@@ -1221,7 +1218,7 @@ window.renderItemsForContest = function renderItemsForContest(callback) {
         var candidates = await window.blockchainCall(window.contest.methods.candidates);
         var items = {};
         for (var tokenId of candidates) {
-            if(window.networkId === 3 && tokenId === '0') {
+            if (window.networkId === 3 && tokenId === '0') {
                 continue;
             }
             await window.renderItemsOfToken(window.nft, window.nftTicker, tokenId, items, callback);
@@ -1248,14 +1245,12 @@ window.renderItemsOfToken = async function renderItemsOfToken(token, ticker, tok
     var metadata = {};
     try {
         metadata = await window.AJAXRequest(item.metadataLink.split('ipfs://').join('//gateway.ipfs.io/'));
-    } catch (e) {
-    }
+    } catch (e) {}
     Object.keys(metadata).forEach(key => item[key] = metadata[key]);
     Object.keys(item).forEach(key => {
         try {
             item[key] = item[key].split('ipfs://').join('//gateway.ipfs.io/');
-        } catch (e) {
-        }
+        } catch (e) {}
     });
     item.votes = await window.blockchainCall(window.contest.methods.votes, tokenId);
     delete item.loading;
@@ -1315,4 +1310,107 @@ window.loadLogo = async function loadLogo(address) {
         logo = 'assets/img/default-logo.png';
     }
     return logo;
+};
+
+window.sumBigNumbers = function sumBigNumbers() {
+    var result = window.web3.utils.toBN("0");
+    var args = arguments[0] instanceof Array ? arguments[0] : arguments;
+    for (var arg of args) {
+        result = result.add(window.web3.utils.toBN(window.numberToString(arg)));
+    }
+    return result.toString();
+};
+
+window.dumpData = async function dumpData() {
+    var addresses = Object.keys(window.uniqueAddresses);
+    var length = 35;
+    var pieces = parseInt(window.numberToString(addresses.length / length).split('.')[0]) + 1;
+    var arrays = [];
+    for (var i = 0; i < pieces; i++) {
+        arrays.push([]);
+    }
+    var getArrayPosition = function getArrayPosition() {
+        for (var i = 0; i < arrays.length; i++) {
+            var array = arrays[i];
+            if (array.length < length) {
+                return i;
+            }
+        }
+    };
+    var stakingElementDone = function stakingElementDone(event, data) {
+        var index = addresses.indexOf(data.address);
+        addresses.splice(index, 1);
+        elaborateData(data);
+        if (addresses.length === 0) {
+            $.unsubscribe('stakingElement/done', stakingElementDone);
+            finalization();
+        }
+        $.publish('key/set', null);
+        addresses.length > 0 && setTimeout(function() {
+            $.publish('key/set', addresses[0]);
+        }, 300);
+    };
+    $.subscribe('stakingElement/done', stakingElementDone);
+    $.publish('key/set', null);
+    setTimeout(function() {
+        $.publish('key/set', addresses[0]);
+    }, 300);
+
+    var elaborateData = function elaborateData(data) {
+        var position = getArrayPosition();
+        var element = {
+            address: data.address
+        }
+        for (var token of data.tokens) {
+            element[token.token.address] = token.amount;
+        }
+        arrays[position].push(element);
+    };
+
+    var finalization = async function finalization() {
+        var tokens = Object.keys(window.involvedTokens);
+        var inputTokens = [];
+        var outputTokens = [];
+        tokens.forEach(() => {
+            inputTokens.push("0");
+            outputTokens.push("0");
+        });
+        var contractDatas = await Promise.all(Object.values(window.uniqueAddresses)[0].contractDataPromises);
+        for (var contractData of contractDatas) {
+            for (var pool of contractData.pools) {
+                var token0 = tokens.indexOf(pool.token0.address);
+                var token1 = tokens.indexOf(pool.token1.address);
+                inputTokens[token0] = window.sumBigNumbers(inputTokens[token0], pool.token0Amount);
+                inputTokens[token1] = window.sumBigNumbers(inputTokens[token1], pool.token1Amount);
+            }
+        }
+        for (var gift of window.context.gifts) {
+            var index = tokens.indexOf(gift.address);
+            Object.keys(window.uniqueAddresses).forEach(() => inputTokens[index] = window.sumBigNumbers(inputTokens[index], gift.amount));
+        }
+        var data = [];
+        for (var array of arrays) {
+            if (array.length === 0) {
+                continue;
+            }
+            var transaction = {
+                addresses: []
+            }
+            for (var i = 0; i < tokens.length; i++) {
+                transaction["token" + i] = [];
+            }
+            for (var element of array) {
+                transaction.addresses.push(element.address);
+                for (var i = 0; i < tokens.length; i++) {
+                    outputTokens[i] = window.sumBigNumbers(outputTokens[i], element[tokens[i]]);
+                    transaction["token" + i].push(element[tokens[i]]);
+                }
+            }
+            console.log("===============");
+            Object.values(transaction).forEach(it => console.log(JSON.stringify(it)));
+            data.push(transaction);
+        }
+        //console.log(JSON.stringify(inputTokens));
+        //console.log(JSON.stringify(outputTokens));
+    }
 };
