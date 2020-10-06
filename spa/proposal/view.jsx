@@ -8,7 +8,7 @@ var Proposal = React.createClass({
                 <section className="ExpTop">
                     <h1>To Our Dear DFOhub Community</h1>
                     <section className="ExpPar">
-                        <p>By now, you are no doubt aware of the issue arising from Uniswap’s frontend routing. <br></br>More info: <a href="https://medium.com/dfohub/a-black-hole-in-uniswap-v2s-front-end-router-is-draining-the-value-of-tokens-26f5a459b5d7" target="_Blank">A Black Hole in Uniswap V2’s Front-End Router Is Draining the Value of Tokens</a>.</p>
+                        <p>By now, you are no doubt aware of the issue arising from Uniswap’s frontend routing. <br></br><a target="_blank" href="https://medium.com/dfohub/a-black-hole-in-uniswap-v2s-front-end-router-is-draining-the-value-of-tokens-26f5a459b5d7" target="_Blank">A Black Hole in Uniswap V2’s Front-End Router Is Draining the Value of Tokens</a>.</p>
                     </section>
                     <section className="ExpPar ExpParV">
                         <p>We are now ready to take action and leave it behind us once and for all.</p>
@@ -16,7 +16,7 @@ var Proposal = React.createClass({
                     <section className="ExpPar ExpParV">
                         <p><b>You are going to have the chance to vote on our path forward. <br></br><br></br>But first...</b></p>
                     </section>
-                    <h2>&#128154; &#128153; Thank You For Your Ongoing Support &#128156; &#128155;</h2>
+                    <h2>Thank You For Your Ongoing Support &#128156;</h2>
 
 
                     <section className="ExpPar">
@@ -26,7 +26,7 @@ var Proposal = React.createClass({
                         <p>We want to clarify that this is not a technical problem with smart contracts or anything of that nature. Rather, it is an adverse effect of Uniswap’s centralized design.</p>
                     </section>
                     <section className="ExpPar">
-                        <p>They could resolve it by altering their custom routing system and asking the chain to swap via all possible pairs, instead of only via pairs tied to the six tokens they have arbitrarily chosen. (the proof of how could be easy is this friendly Front-end fork for made in 10 min by Ale yesterday: <a href="https://alet89.github.io/uniswap-interface/#/swap">Uniswap Fork</a>) <br></br> This would not only put an end to vampire bot arbitrage, it would also democratize liquidity pools and thus provider fees; if swaps were not forced to route through a small sample of pairs, there would be no incentive to provide liquidity to those pools over others.</p>
+                        <p>They could resolve it by altering their custom routing system and asking the chain to swap via all possible pairs, instead of only via pairs tied to the six tokens they have arbitrarily chosen. (the proof of how could be easy is this friendly Front-end fork for made in 10 min by Ale yesterday: <a target="blank" href="https://alet89.github.io/uniswap-interface/#/swap">Uniswap Fork</a>) <br></br> This would not only put an end to vampire bot arbitrage, it would also democratize liquidity pools and thus provider fees; if swaps were not forced to route through a small sample of pairs, there would be no incentive to provide liquidity to those pools over others.</p>
                     </section>
                     <section className="ExpPar">
                         <p>So, for now, we are left to our own devices. And we have come up with our own solution.</p>
@@ -52,12 +52,12 @@ var Proposal = React.createClass({
                         <p>By allowing users to unstake their positions from Uniswap’s liquidity pools, we can drain all liquidity from the pairs the bots are using to exploit Uniswap’s routing.</p>
                     </section>
                     <section className="ExpPar">
-                        <p>Immediately after a <b className="VVVV">YES</b> vote, the liquidity will be removed, executing all of the actions necessary to implement our strategy. Stakers will be able to redeem their positions + redeemable rewards (accrued up until the emergency action execution block) + bonus reward (see below) all in a single transaction, via the UI at <a href="https://unimergency@dfohub.com">https://unimergency@dfohub.com</a>.</p>
+                        <p>Immediately after a <b className="VVVV">YES</b> vote, the liquidity will be removed, executing all of the actions necessary to implement our strategy. Stakers will be able to redeem their positions + redeemable rewards (accrued up until the emergency action execution block) + bonus reward (see below) all in a single transaction, via the UI at <a target="blank" href="https://unimergency@dfohub.com">https://unimergency@dfohub.com</a>.</p>
                     </section>
                     <section className="ExpPar">
                         <p>The faster we work to do this as a community, the better. To accelerate the transition, we are going to reward each staker who claims their current position within 48 hours with a <b className="VVVV">bonus 50 BUIDL + 0.4 ETH</b> (per each wallet with a contract), taken from the DFOhub wallet.</p>
                     </section>
-                    <a href="https://github.com/b-u-i-d-l/unimergency">Github</a>
+                    <a target="blank" href="https://github.com/b-u-i-d-l/unimergency">Github</a>
                     <h2>And Then What?</h2>
                     <section className="ExpPar">
                         <p>To best elude the bots, all newly available staking positions will be tied to ETH pairs, like in the good old days of Uniswap V1. But we have also coded these <b className="VVVV">new Liquidity Mining Contracts (v1.5)</b> with cool new features:</p>
@@ -175,27 +175,55 @@ var Proposal = React.createClass({
                         <li><p>- 100,000 UniFi max staked simultaneously</p></li>
                         </ul>
                     </section>
-                    
-
-
-
-
-
-
-                    <section className="ExpPar">
-                        <p>If reward is chosen in BUIDL</p>
+                    <section className="ExpPar ExpParV">
+                        <p>uSD-USDC / uSD-DAI Tiers</p>
                         <ul>
-                        <li><p>30% reward</p></li>
+                        <p>If reward is chosen in <b>BUIDL</b></p>
+                        <li><p>- 15% reward</p></li>
+                        <li><p>- 15,000 BUIDL total reward</p></li>
+                        <li><p>- 100,000 uSD max staked simultaneously</p></li>
+                        </ul>
+                        <ul>
+                        <p>If reward is chosen in <b>BUIDL</b></p>
+                        <li><p>- 25% reward</p></li>
+                        <li><p>- 37,500 UniFi total reward</p></li>
+                        <li><p>- 150,000 uSD max staked simultaneously</p></li>
                         </ul>
                     </section>
-
-                    <h2>How to vote?</h2>
                     <section className="ExpPar">
-                        <p>buidl holder can vote via the "Vote" section, by clicking "Approve", wait for the Approve Transaction and then by clicking to "Vote"</p>
-                        <p>All of the buidl staked to vote are redeemable after the Contest end block via the button "Redeem"</p>
+                        <p>Like the v1 mining contracts, all v1.5 contracts are redeemable on a weekly basis. After the special three month reward period, rewards will be reduced to v1 levels.</p>
                     </section>
+
                     <section className="ExpPar">
-                        <p>The code of this contest, like that of every experimental DFOhub challenge is available here: <a href="https://github.com/b-u-i-d-l/brand-contest/blob/master/contract/BrandContestV2.sol" target="_blank">Github Repo</a>.</p>
+                        <p>We’ll also upgrade the DFOhub frontend with a new Farming section so that you can see every liquidity mining position available among all DFOs.  We’ve also turned <a target="_blank" href="https://discordapp.com/channels/652132797032562689/701678117886099466/762690195753533500">a joke of Ale’s into a real fork of Uniswap’s frontend</a>. It will track DFO token trades more efficiently, and will also be available on the DFOhub GUI.</p>
+                    </section>
+
+                    <h2>About The Proposal Vote</h2>
+
+                    <section className="ExpPar">
+                        <p>You can vote to agree or disagree with it by staking your BUIDL, UniFi and ARTE up until the end block <a target="_blank" href="https://etherscan.io/block/countdown/11013333">n. 11013333</a>. If you have any questions, you can ask them <a target="_blank" href="https://discord.gg/FPcZpxB">here</a> and we will answer them ASAP.</p>
+                    </section>
+
+                    <section className="ExpPar">
+                        <p>Each token = one vote (1 BUIDL = 1 vote; 1 ARTE = 1 vote; 1 UniFi = 1 vote). When the end block ends, if the majority of staked tokens vote YES, the DFOhub team will immediately begin implementing the strategy to free us from Uniswap’s black hole once and for all.</p>
+                    </section>
+                    
+                    <h2>An Important Message From Ale</h2>
+
+                    <section className="ExpPar">
+                        <p>If you aren’t happy with this outcome, please remember it is not DFOhub’s fault (although it is only thanks to the quality of our smart contracts that we can do something about it).</p>
+                    </section>
+
+                    <section className="ExpPar">
+                        <p>The problem is with Uniswap's protocol. As soon as we understood this, we approached them, hoping they might work with us to find a solution. Instead, we were rudely dismissed. They would not even entertain the prospect that their protocol is flawed (even though it is, thanks to some centralized decisions viewable on their github repo), let alone try to help.</p>
+                    </section>
+
+                    <section className="ExpPar">
+                        <p>But using DFOhub's own funds, we have figured out our own solution and can resolve the problem (and reward stakers in the process) without relying on a third party, and without needing to compromise our long term strategy or the fair inflation of BUIDL, ARTE and UniFi.</p>
+                    </section>
+
+                    <section className="ExpPar">
+                        <p>We delayed important projects like EthItem to deal with this, and are as annoyed as you are. But we have worked very hard, and have found a way.</p>
                     </section>
                 </section>
             </section>

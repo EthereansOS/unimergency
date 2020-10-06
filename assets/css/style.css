@@ -131,8 +131,8 @@ figure {margin-block-start: 0;margin-block-end: 0;margin-inline-start: 0px;margi
 }
 @media only screen and (min-width: 890px) {
     .Menu {width: 850px;}
-    .PagerMenu {height: 70px;}
-    .Menu a {padding: 22px 0;font-size: 20px;height: 26px;}
+    .PagerMenu {height: 44px;}
+    .Menu a {padding: 10px 0;font-size: 20px;height: 24px;}
     .VoteItems, .Leaders {width: 850px;}
     .VoteItem {width: 250px; margin: 10px;}
     .VoteItem article figure, .VoteItem article figure img {width: 250px; height: 250px;}
@@ -168,3 +168,6 @@ figure {margin-block-start: 0;margin-block-end: 0;margin-inline-start: 0px;margi
 .ExpPar ul {display: inline-block; margin: 10px auto; width: 100%;}
 .ExpPar ul > p {text-decoration: underline;}
 .ExpPar ul li {width: 95%; margin-left: 4%; margin-top: 5px;}
+a {cursor: pointer;}
+
+.bigLoader img {width: 100px;}
