@@ -110,40 +110,56 @@ All new contracts are for a three month period, and new positions can be opened 
 
 ### BUIDL-ETH Tier
 
-If reward is chosen in BUIDL
+##### If reward is chosen in BUIDL
+
 -30% reward
+
 -36,000 BUIDL total reward
+
 -120,000 BUIDL max staked simultaneously
 
-If reward is chosen in UniFi
+##### If reward is chosen in UniFi
+
 -50% reward
+
 -50,000 UniFi total reward
+
 -100,000 BUIDL max staked simultaneously
-
-
 
 ### UniFi-ETH Tier
 
-If reward is chosen in UniFi
+##### If reward is chosen in UniFi
+
 -50% reward
+
 -50,000 UniFi total reward
+
 -100,000 UniFi max staked simultaneously
 
-If reward is chosen in BUIDL
+##### If reward is chosen in BUIDL
+
 -30% reward
+
 -30,000 BUIDL total reward
+
 -100,000 UniFi max staked simultaneously
 
 ### uSD-USDC / uSD-DAI Tiers
 
-If reward is chosen in BUIDL
+##### If reward is chosen in BUIDL
+
 -15% reward
+
 -15,000 BUIDL total reward
+
 -100,000 uSD max staked simultaneously
 
-If reward is chosen in UniFi
+##### If reward is chosen in UniFi
+
 -25% reward
+
 -37,500 UniFi total reward
+
 -150,000 uSD max staked simultaneously
 
 
