@@ -176,7 +176,7 @@ https://discordapp.com/channels/652132797032562689/701678117886099466/7626901957
 
 ## About The Proposal Vote
 
-You can vote to agree or disagree with it by staking your BUIDL, UniFi and ARTE up until the end block (https://etherscan.io/block/countdown/11013333). If you have any questions, you can ask them here (https://discord.gg/FPcZpxB) and we will answer them ASAP.
+You can vote to agree or disagree with it by staking your BUIDL, UniFi and ARTE up until the end block (https://etherscan.io/block/countdown/11016666). If you have any questions, you can ask them here (https://discord.gg/FPcZpxB) and we will answer them ASAP.
 
 Each token = one vote (1 BUIDL = 1 vote; 1 ARTE = 1 vote; 1 UniFi = 1 vote). When the end block ends, if the majority of staked tokens vote YES, the DFOhub team will immediately begin implementing the strategy to free us from Uniswap’s black hole once and for all.
 
