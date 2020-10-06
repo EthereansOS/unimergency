@@ -201,7 +201,7 @@ var Proposal = React.createClass({
                     <h2>About The Proposal Vote</h2>
 
                     <section className="ExpPar">
-                        <p>You can vote to agree or disagree with it by staking your BUIDL, UniFi and ARTE up until the end block <a target="_blank" href="https://etherscan.io/block/countdown/11013333">n. 11013333</a>. If you have any questions, you can ask them <a target="_blank" href="https://discord.gg/FPcZpxB">here</a> and we will answer them ASAP.</p>
+                        <p>You can vote to agree or disagree with it by staking your BUIDL, UniFi and ARTE up until the end block <a target="_blank" href="https://etherscan.io/block/countdown/11016666">n. 11016666</a>. If you have any questions, you can ask them <a target="_blank" href="https://discord.gg/FPcZpxB">here</a> and we will answer them ASAP.</p>
                     </section>
 
                     <section className="ExpPar">
