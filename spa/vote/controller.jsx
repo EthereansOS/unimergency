@@ -74,7 +74,7 @@ var VoteController = function (view) {
         var balanceOf = await window.blockchainCall(context.view.state.selectedToken.token.methods.balanceOf, window.walletAddress);
         var allowance = await window.blockchainCall(context.view.state.selectedToken.token.methods.allowance, window.walletAddress, context.view.state.voteContract.options.address);
         var approved = parseInt(allowance) >= parseInt(balanceOf);
-        context.view.setState({votes, myVotes, currentBlock, startBlock, endBlock, started, terminated, running, balanceOf, redeemed, votes, approved});
+        context.view.setState({votes, myVotes, currentBlock, startBlock, endBlock, started, terminated, running, balanceOf, redeemed, voted, approved});
     }
 
     context.performApprove = async function performApprove() {
