@@ -168,6 +168,25 @@ figure {margin-block-start: 0;margin-block-end: 0;margin-inline-start: 0px;margi
 .ExpPar ul {display: inline-block; margin: 10px auto; width: 100%;}
 .ExpPar ul > p {text-decoration: underline;}
 .ExpPar ul li {width: 95%; margin-left: 4%; margin-top: 5px;}
-a {cursor: pointer;}
+a {cursor: pointer !important;}
 
 .bigLoader img {width: 100px;}
+
+.Status {width: 100%; text-align: center;}
+.Status h2 {font-size: 25px; color: #787878; margin: 30px auto 10px auto;}
+.Status h2 a {color: rgb(255, 0, 122);}
+.Status h3 {color: rgb(255, 0, 122);font-size: 25px;margin: 10px auto 10px auto;}
+.Status h5 {font-size: 18px; color: #787878; margin: 30px auto 10px auto;}
+.YOURVOTE {width: 300px; padding: 1em; background-color: rgb(255, 255, 255);box-shadow: rgba(0, 0, 0, 0.01) 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 4px 8px, rgba(0, 0, 0, 0.04) 0px 16px 24px, rgba(0, 0, 0, 0.01) 0px 24px 32px; border-radius: 30px; display: block; margin: 30px auto; clear: both;}
+.YOURVOTE h5 {font-size: 20px; color: #01182b; margin: 15px auto;}
+.YOURVOTE h4 {font-size: 20px; color: #01182b; margin: 15px auto;}
+.YOURVOTE h6 {font-size: 16px; color: #303030; margin: 15px auto;}
+.YOURVOTE p {font-size: 15px; color: #303030; margin: 15px 8px 5px 8px;}
+.YOURVOTE a {color: rgb(255, 0, 122);}
+.YOURVOTE input {width: 100px; border-radius: 20px;border: 1px solid rgb(247, 248, 250);background-color: rgb(228, 228, 228); font-size: 15px; margin: auto 10px; padding: 5px;}
+.YOURVOTE select {width: 100px; border-radius: 20px;border: 1px solid rgb(247, 248, 250);background-color: rgb(228, 228, 228);font-size: 13px; padding: 5px;}
+.YOURVOTE span {text-align: center; font-size: 13px; width: 250px; display: inline-block; margin: 10px 0; color: #787878;}
+.APPROVEBTN {width: 250px; background-color: rgb(255, 0, 122);color: white !important;cursor: auto;box-shadow: none;border: 1px solid transparent;outline: none;opacity: 1;padding: 18px;border-radius: 12px;font-weight: 500;text-decoration: none;}
+.VTNBTN {display: inline-block; width: 103px; margin: 10px 4px;background-color: rgb(255, 0, 122);color: white !important;cursor: auto;box-shadow: none;border: 1px solid transparent;outline: none;opacity: 1;padding: 18px;border-radius: 12px;font-weight: 500; text-decoration: none;}
+
+.Disabled {background-color: rgb(237, 238, 242);color: rgb(136, 141, 155) !important;}
