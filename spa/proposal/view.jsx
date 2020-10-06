@@ -184,7 +184,7 @@ var Proposal = React.createClass({
                         <li><p>- 100,000 uSD max staked simultaneously</p></li>
                         </ul>
                         <ul>
-                        <p>If reward is chosen in <b>BUIDL</b></p>
+                        <p>If reward is chosen in <b>UniFi</b></p>
                         <li><p>- 25% reward</p></li>
                         <li><p>- 37,500 UniFi total reward</p></li>
                         <li><p>- 150,000 uSD max staked simultaneously</p></li>
