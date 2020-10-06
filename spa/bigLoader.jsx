@@ -45,9 +45,7 @@ var BigLoader = React.createClass({
       {!this.state.chunks && this.state.propagate && <h1>{this.state.counter}</h1>}
       {!this.state.chunks && this.state.propagate && <h2>Waiting for Propagation</h2>}
       {!this.state.chunks && this.state.transaction && <h2>Transaction {this.state.transaction} {this.state.transactions > 1 && <span>of {this.state.transactions}</span>}</h2>}
-      <div class="loadingio-spinner-ripple-6l4nh0xpwdg"><div class="ldio-2it1sjbil3o">
-        <div></div><div></div>
-      </div></div>
+      <img src="assets/img/vampire.gif"/>
     </section>);
   }
 });

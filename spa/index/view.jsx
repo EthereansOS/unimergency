@@ -38,7 +38,7 @@ var Index = React.createClass({
             <section className="OnePage">
                 <header className="Head">
                     <section className="HBrand">
-                        <h6><img src="assets/img/vampire.gif"></img> <b>#Unimergency</b></h6>
+                        <h6><img src="assets/img/vampire1.gif"></img></h6>
                     </section>
                     <section className="HActions">
                         <a href="https://discord.gg/FPcZpxB" target="_Blank">#AMA</a>
