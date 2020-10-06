@@ -52,7 +52,7 @@ var Proposal = React.createClass({
                         <p>By allowing users to unstake their positions from Uniswap’s liquidity pools, we can drain all liquidity from the pairs the bots are using to exploit Uniswap’s routing.</p>
                     </section>
                     <section className="ExpPar">
-                        <p>Immediately after a <b className="VVVV">YES</b> vote, the liquidity will be removed, executing all of the actions necessary to implement our strategy. Stakers will be able to redeem their positions + redeemable rewards (accrued up until the emergency action execution block) + bonus reward (see below) all in a single transaction, via the UI at <a target="blank" href="https://unimergency@dfohub.com">https://unimergency@dfohub.com</a>.</p>
+                        <p>Immediately after a <b className="VVVV">YES</b> vote, the liquidity will be removed, executing all of the actions necessary to implement our strategy. Stakers will be able to redeem their positions + redeemable rewards (accrued up until the emergency action execution block) + bonus reward (see below) all in a single transaction, via the UI at <a target="blank" href="https://unimergency.dfohub.com">https://unimergency.dfohub.com</a>.</p>
                     </section>
                     <section className="ExpPar">
                         <p>The faster we work to do this as a community, the better. To accelerate the transition, we are going to reward each staker who claims their current position within 48 hours with a <b className="VVVV">bonus 50 BUIDL + 0.4 ETH</b> (per each wallet with a contract), taken from the DFOhub wallet.</p>
