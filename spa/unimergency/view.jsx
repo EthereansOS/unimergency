@@ -1,4 +1,4 @@
-var Redeem = React.createClass({
+var Unimergency = React.createClass({
     requiredScripts: [
         'spa/bigLoader.jsx'
     ],
@@ -22,10 +22,10 @@ var Redeem = React.createClass({
         var _this = this;
         return(<section className="walletlist">
             {this.state && this.state.uniqueAddresses && !this.state.key && <section>
-                <h1>Total Liquidity Mining Stkers Unique Addresses to redeem: {Object.keys(this.state.uniqueAddresses).length}</h1>
+                <h1>Addresses: {Object.keys(this.state.uniqueAddresses).length}</h1>
                 <ul>
                     {Object.keys(this.state.uniqueAddresses).map(uniqueAddress => <li key={uniqueAddress}>
-                    <span><a href="javascript:;" onClick={this.onClick} data-key={uniqueAddress}>{uniqueAddress}</a>{_this.state.uniqueAddresses[uniqueAddress].redeemed && <span>&#9989;</span>}</span>
+                    <span><a href="javascript:;" onClick={this.onClick} data-key={uniqueAddress}>{uniqueAddress}</a>{_this.state.uniqueAddresses[uniqueAddress].redeemed ? <span>&#9989;</span> : <span>&#128176;</span>}</span>
                     </li>)}
                 </ul>
                 <br/>

@@ -1,6 +1,7 @@
 var Proposal = React.createClass({
     requiredScripts: [
-        'spa/bigLoader.jsx'
+        'spa/bigLoader.jsx',
+        'spa/ghostLoader.jsx'
     ],
     getDefaultSubscriptions() {
         return {
@@ -39,9 +40,9 @@ var Proposal = React.createClass({
         var _this = this;
         return (
             <section>
-                {this.state && <section className="LEADERSFINALAll">
-                    <section>
-                    {!window.walletAddress && <section className="Actions YOURVOTE">
+                <section className="LEADERSFINALAll">
+                    {this.state && <section>
+                        {!window.walletAddress && <section className="Actions YOURVOTE">
                             <section className="Buttons">
                                 <a className="APPROVEBTN" href="javascript:;" onClick={() => window.ethereum.enable().then(this.controller.loadData)}>Connect</a>
                             </section>
@@ -73,9 +74,9 @@ var Proposal = React.createClass({
                                 <h4>{window.fromDecimals(this.state.votes[1], 18).split('.')[0]} Refuse</h4>
                             </section>}
                         </section>
-                        
-                    </section>
-                </section>}
+                    </section>}
+                    {(!this.state || !this.state.votes) && <img src="assets/img/vampire.gif"/>}
+                </section>
                 <section className="ExpTop">
                     <h1>To Our Dear DFOhub Community</h1>
                     <section className="ExpPar">

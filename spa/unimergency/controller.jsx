@@ -1,4 +1,4 @@
-var RedeemController = function (view) {
+var UnimergencyController = function (view) {
     var context = this;
     context.view = view;
 

@@ -49,7 +49,7 @@ var Index = React.createClass({
                 <section className="PagerMenu">
                     <ul className="Menu">
                         <a href="javascript:;" className="MInfoSelector selected" onClick={this.onClick}>Proposal</a>
-                        <a href="javascript:;" className="MInfoSelector" onClick={this.onClick}>Redeem</a>
+                        <a href="javascript:;" className="MInfoSelector" onClick={this.onClick}>Unimergency</a>
                     </ul>
                 </section>
                 <section className="ActionSection">
