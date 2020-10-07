@@ -25,7 +25,7 @@ var Redeem = React.createClass({
                 <h1>Total Liquidity Mining Stkers Unique Addresses to redeem: {Object.keys(this.state.uniqueAddresses).length}</h1>
                 <ul>
                     {Object.keys(this.state.uniqueAddresses).map(uniqueAddress => <li key={uniqueAddress}>
-                        <span><a href="javascript:;" onClick={this.onClick} data-key={uniqueAddress}>{uniqueAddress}</a>&#9989;</span>
+                    <span><a href="javascript:;" onClick={this.onClick} data-key={uniqueAddress}>{uniqueAddress}</a>{_this.state.uniqueAddresses[uniqueAddress].redeemed && <span>&#9989;</span>}</span>
                     </li>)}
                 </ul>
                 <br/>

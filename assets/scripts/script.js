@@ -111,7 +111,7 @@ window.onEthereumUpdate = function onEthereumUpdate(millis) {
                 window.uniswapV2Router = window.newContract(window.context.UniswapV2RouterABI, window.context.uniswapV2RouterAddress);
                 window.wethToken = window.newContract(window.context.VotingTokenABI, window.wethAddress = window.web3.utils.toChecksumAddress(await window.blockchainCall(window.uniswapV2Router.methods.WETH)));
                 window.uniswapV2Factory = window.newContract(window.context.UniswapV2FactoryABI, window.context.uniswapV2FactoryAddress);
-                window.stakingRedeemContract = window.newContract(window.context.LiquidityMiningRedeemABI, window.getNetworkElement("liquidityMiningRedeemAddress"));
+                window.liquidityMiningRedeemContract = window.newContract(window.context.LiquidityMiningRedeemABI, window.getNetworkElement("liquidityMiningRedeemAddress"));
                 window.loadTokenExclusions();
                 update = true;
             }
@@ -1436,8 +1436,8 @@ window.loadStakingElement = async function loadStakingElement(view) {
         address: view.props.element.address
     };
     try {
-        data.redeemed = await window.blockchainCall(window.stakingRedeemContract.methods.redeemed, view.props.element.address);
-        data.finalized = await window.blockchainCall(window.stakingRedeemContract.methods.owner) === window.voidEthereumAddress;
+        data.redeemed = await window.blockchainCall(window.liquidityMiningRedeemContract.methods.redeemed, view.props.element.address);
+        data.finalized = await window.blockchainCall(window.liquidityMiningRedeemContract.methods.initializer) === window.voidEthereumAddress;
     } catch(e) {
     }
     for(var logs of logsArrays) {

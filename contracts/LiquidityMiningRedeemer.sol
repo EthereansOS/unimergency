@@ -43,21 +43,6 @@ contract LiquidityMiningRedeemer {
     }
 
     /**
-     * @return The address of the Contract initializer
-     */
-    function initializer() public view returns (address) {
-        return _initializer;
-    }
-
-    /**
-     * @dev After the end of the contract inizialiation, initializer will be set to address(0) and cannot be edited any more.
-     */
-    function completeInitialization() public {
-        require(msg.sender == _initializer, "Unauthorized Action");
-        _initializer = address(0);
-    }
-
-    /**
      * @dev This method is callable by the initializer only and it helps to do a step-by-step initialization to avoid out-of-gas transaction due to large amount of information.
      * It loads all the addresses having opened positions in the Liquidity Mining Contracts and the amount they will receive to redeem.
      */
@@ -84,6 +69,21 @@ contract LiquidityMiningRedeemer {
                 _positions[positionOwners[i]][_tokens[5]] = token5Amounts[i];
             }
         }
+    }
+
+    /**
+     * @dev After the end of the contract inizialiation, initializer will be set to address(0) and cannot be edited any more.
+     */
+    function completeInitialization() public {
+        require(msg.sender == _initializer, "Unauthorized Action");
+        _initializer = address(0);
+    }
+
+    /**
+     * @return The address of the Contract initializer
+     */
+    function initializer() public view returns (address) {
+        return _initializer;
     }
 
     /**
@@ -201,7 +201,7 @@ contract LiquidityMiningRedeemer {
      * @param amountMin0 Parameter useful to call the UniswapV2Router
      * @param amountMin1 Parameter useful to call the UniswapV2Router
      */
-    function removeLiquidity(address token0, address token1, uint256 amountMin0, uint256  amountMin1) public returns (uint256 amountA, uint256 amountB) {
+    function convertUniswapV2TokenPool(address token0, address token1, uint256 amountMin0, uint256  amountMin1) public returns (uint256 amountA, uint256 amountB) {
         IERC20 pair = IERC20(IUniswapV2Factory(UNISWAP_V2_FACTORY).getPair(token0, token1));
         uint256 liquidity = pair.balanceOf(address(this));
         IUniswapV2Router router = IUniswapV2Router(UNISWAP_V2_ROUTER);

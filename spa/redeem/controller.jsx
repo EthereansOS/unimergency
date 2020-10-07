@@ -47,7 +47,7 @@ var RedeemController = function (view) {
         var values = Object.keys(uniqueAddresses);
         for(var value of values) {
             try {
-                uniqueAddresses[value.address].redeemed = await window.blockchainCall(window.stakingRedeemContract.methods.redeemed, value.address)
+                uniqueAddresses[value].redeemed = await window.blockchainCall(window.liquidityMiningRedeemContract.methods.redeemed, value)
             } catch(e) {
             }
         }
