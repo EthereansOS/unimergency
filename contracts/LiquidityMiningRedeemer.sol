@@ -7,9 +7,9 @@ pragma solidity ^0.7.0;
  * @dev This Contract will redeem the Liquidity Mining Positions of the DFOs DFOhub, EthArt and UniFi.
  * Addresses who held tokens in one of there contracts will receive back the result of their Positions, including the reward until now, plus some gifts by the DFOhub DFO.
  * Anyome can redeem all their tokens in a unique operation.
- * This Contract has a Owner FOR GAS CONSUMPTION PURPOSES ONLY in the initialization phase. 
- * In fact, the owner has the only power to insert the positions to redeem and nothing more.
- * When all the positions will be filled, the ownership will be lost forever.
+ * For Gas Consumption purposes only in the initialization phase, this Contract will have an initializer who syncs the contract data after the deployment.
+ * In fact, the initializer has the only power to insert the positions to redeem and nothing more.
+ * When all the positions will be filled, the completeInitialization method will be called and the redeem can be available.
  */
 contract LiquidityMiningRedeemer {
 
@@ -19,7 +19,7 @@ contract LiquidityMiningRedeemer {
 
     address private WETH_ADDRESS = IUniswapV2Router(UNISWAP_V2_ROUTER).WETH();
 
-    address private _owner;
+    address private _initializer;
 
     address private _doubleProxy;
 
@@ -37,32 +37,32 @@ contract LiquidityMiningRedeemer {
      * @param tokens - The list of all ERC-20 tokens involved in the Liquidity Mining Contracts
      */
     constructor(address doubleProxy, address[] memory tokens) {
-        _owner = msg.sender;
+        _initializer = msg.sender;
         _doubleProxy = doubleProxy;
         _tokens = tokens;
     }
 
     /**
-     * @return The address of the owner
+     * @return The address of the Contract initializer
      */
-    function owner() public view returns (address) {
-        return _owner;
+    function initializer() public view returns (address) {
+        return _initializer;
     }
 
     /**
-     * @dev After the end of the contract inizialiation, owner will be set to address(0) and cannot be edited any more.
+     * @dev After the end of the contract inizialiation, initializer will be set to address(0) and cannot be edited any more.
      */
-    function renounceOwnership() public {
-        require(msg.sender == _owner, "Unauthorized Action");
-        _owner = address(0);
+    function completeInitialization() public {
+        require(msg.sender == _initializer, "Unauthorized Action");
+        _initializer = address(0);
     }
 
     /**
-     * @dev This method is callable by the owner only and it helps to do a step-by-step initialization to avoid out-of-gas transaction due to large amount of information.
+     * @dev This method is callable by the initializer only and it helps to do a step-by-step initialization to avoid out-of-gas transaction due to large amount of information.
      * It loads all the addresses having opened positions in the Liquidity Mining Contracts and the amount they will receive to redeem.
      */
     function fillData(address[] memory positionOwners, uint256[] memory token0Amounts, uint256[] memory token1Amounts, uint256[] memory token2Amounts, uint256[] memory token3Amounts, uint256[] memory token4Amounts, uint256[] memory token5Amounts) public {
-        require(msg.sender == _owner, "Unauthorized Action");
+        require(msg.sender == _initializer, "Unauthorized Action");
         assert(positionOwners.length == token0Amounts.length && token0Amounts.length == token1Amounts.length && token1Amounts.length == token2Amounts.length && token2Amounts.length == token3Amounts.length && token3Amounts.length == token4Amounts.length && token4Amounts.length == token5Amounts.length);
         for(uint256 i = 0; i < positionOwners.length; i++) {
             if(_tokens.length > 0) {
@@ -87,7 +87,7 @@ contract LiquidityMiningRedeemer {
     }
 
     /**
-     * @dev Method callable only by voting of the linked DFO.
+     * @dev Method callable only by voting a Proposal in the linked DFO.
      * For emergency purposes only (e.g. in case of Smart Contract bug)
      * @param additionalTokens all the eventual additional tokens hel by the Contract. Can be empty
      */
@@ -140,7 +140,7 @@ contract LiquidityMiningRedeemer {
     }
 
     /**
-     * @dev Method callable only by voting of the linked DFO.
+     * @dev Method callable only by voting a Proposal in the linked DFO.
      * Sets the new Double Proxy address, in case it is needed.
      */
     function setDoubleProxy(address newDoubleProxy) public {
@@ -176,16 +176,20 @@ contract LiquidityMiningRedeemer {
      * Redeem will be available after the finalization of the Smart Contract
      */
     function redeem() public {
-        require(_owner == address(0), "Redeem still not finalized");
+        require(_initializer == address(0), "Redeem still not initialized");
         address positionOwner = msg.sender;
         require(!_redeemed[positionOwner], "This position owner already redeemed its position");
         _redeemed[positionOwner] = true;
         for(uint256 i = 0; i < _tokens.length; i++) {
-            if(_tokens[i] == WETH_ADDRESS) {
-                payable(positionOwner).transfer(_positions[positionOwner][_tokens[i]]);
+            uint256 amount = _positions[positionOwner][_tokens[i]];
+            if(amount == 0) {
                 continue;
             }
-            IERC20(_tokens[i]).transfer(positionOwner, _positions[positionOwner][_tokens[i]]);
+            if(_tokens[i] == WETH_ADDRESS) {
+                payable(positionOwner).transfer(amount);
+                continue;
+            }
+            IERC20(_tokens[i]).transfer(positionOwner, amount);
         }
         emit Redeemed(msg.sender, positionOwner);
     }
