@@ -10,7 +10,8 @@ var RedeemController = function (view) {
         window.involvedTokens = tokens;
         var uniqueAddresses = {};
         var contractDataPromises = [];
-        for(var contractData of window.context.stakingContractData) {
+        var originalStakingContractData = window.getNetworkElement("stakingContractData");
+        for(var contractData of originalStakingContractData) {
             contractDataPromises.push(context.loadStakingContractData(contractData, tokens).then(it => {
                 context.view.setState({tokens});
                 return it;
@@ -29,7 +30,10 @@ var RedeemController = function (view) {
                 var address = window.web3.utils.toChecksumAddress(window.web3.eth.abi.decodeParameter('address', log.topics[1]));
                 var tier = window.web3.eth.abi.decodeParameter('uint256', log.topics[2]);
                 address = window.web3.utils.toChecksumAddress(address);
-                uniqueAddresses[address] = uniqueAddresses[address] || {address, contractDataPromises};
+                uniqueAddresses[address] = uniqueAddresses[address] || {
+                    address, 
+                    contractDataPromises 
+                };
                 uniqueAddresses[address][contractData.address] = uniqueAddresses[address][contractData.address] || {
                     contractDataPromise : contractDataPromises[contractDataPromises.length - 1],
                     positions : {}
@@ -40,6 +44,14 @@ var RedeemController = function (view) {
         window.uniqueAddresses = uniqueAddresses;
         var key = uniqueAddresses[window.walletAddress] ? window.walletAddress : null;
         context.view.setState({uniqueAddresses, key});
+        var values = Object.keys(uniqueAddresses);
+        for(var value of values) {
+            try {
+                uniqueAddresses[value.address].redeemed = await window.blockchainCall(window.stakingRedeemContract.methods.redeemed, value.address)
+            } catch(e) {
+            }
+        }
+        context.view.setState({uniqueAddresses});
     };
 
     context.loadStakingContractData = async function loadStakingContractData(contractData, tokens) {

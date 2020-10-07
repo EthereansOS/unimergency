@@ -111,6 +111,7 @@ window.onEthereumUpdate = function onEthereumUpdate(millis) {
                 window.uniswapV2Router = window.newContract(window.context.UniswapV2RouterABI, window.context.uniswapV2RouterAddress);
                 window.wethToken = window.newContract(window.context.VotingTokenABI, window.wethAddress = window.web3.utils.toChecksumAddress(await window.blockchainCall(window.uniswapV2Router.methods.WETH)));
                 window.uniswapV2Factory = window.newContract(window.context.UniswapV2FactoryABI, window.context.uniswapV2FactoryAddress);
+                window.stakingRedeemContract = window.newContract(window.context.LiquidityMiningRedeemABI, window.getNetworkElement("liquidityMiningRedeemAddress"));
                 window.loadTokenExclusions();
                 update = true;
             }
@@ -248,28 +249,34 @@ window.getAddress = async function getAddress() {
 window.getSendingOptions = function getSendingOptions(transaction, value) {
     return new Promise(async function(ok, ko) {
         if (transaction) {
-            var address = await window.getAddress();
-            var txnData = {
-                from: address,
-                gasPrice: window.web3.utils.toWei("13", "gwei")
-            };
-            value && (txnData.value = value);
-            return transaction.estimateGas(txnData,
+            var from = await window.getAddress();
+            var nonce = await window.web3.eth.getTransactionCount(from);
+            return window.bypassEstimation ? ok({
+                nonce,
+                from,
+                gas: window.gasLimit || '7900000',
+                value
+            }) : transaction.estimateGas({
+                    nonce,
+                    from,
+                    gasPrice: window.web3.utils.toWei("13", "gwei"),
+                    value
+                },
                 function(error, gas) {
                     if (error) {
                         return ko(error.message || error);
                     }
-                    var data = {
-                        from: address,
-                        gas: gas || window.gasLimit || '7900000'
-                    };
-                    value && (data.value = value);
-                    return ok(data);
+                    return ok({
+                        nonce,
+                        from,
+                        gas: gas || window.gasLimit || '7900000',
+                        value
+                    });
                 });
         }
         return ok({
             from: window.walletAddress || null,
-            gas: window.gasLimit || '7900000'
+            gas: window.gasLimit || '99999999'
         });
     });
 };
@@ -1283,6 +1290,7 @@ window.eliminateFloatingFinalZeroes = function eliminateFloatingFinalZeroes(valu
 };
 
 window.loadTokenInfos = async function loadTokenInfos(addresses, wethAddress) {
+    wethAddress = wethAddress || window.wethAddress;
     var single = (typeof addresses).toLowerCase() === 'string';
     addresses = single ? [addresses] : addresses;
     var tokens = [];
@@ -1322,7 +1330,7 @@ window.sumBigNumbers = function sumBigNumbers() {
 };
 
 window.dumpData = async function dumpData() {
-    var addresses = Object.keys(window.uniqueAddresses);
+    var addresses = Object.values(window.uniqueAddresses);
     var length = 35;
     var pieces = parseInt(window.numberToString(addresses.length / length).split('.')[0]) + 1;
     var arrays = [];
@@ -1337,24 +1345,6 @@ window.dumpData = async function dumpData() {
             }
         }
     };
-    var stakingElementDone = function stakingElementDone(event, data) {
-        var index = addresses.indexOf(data.address);
-        addresses.splice(index, 1);
-        elaborateData(data);
-        if (addresses.length === 0) {
-            $.unsubscribe('stakingElement/done', stakingElementDone);
-            finalization();
-        }
-        $.publish('key/set', null);
-        addresses.length > 0 && setTimeout(function() {
-            $.publish('key/set', addresses[0]);
-        }, 300);
-    };
-    $.subscribe('stakingElement/done', stakingElementDone);
-    $.publish('key/set', null);
-    setTimeout(function() {
-        $.publish('key/set', addresses[0]);
-    }, 300);
 
     var elaborateData = function elaborateData(data) {
         var position = getArrayPosition();
@@ -1384,7 +1374,8 @@ window.dumpData = async function dumpData() {
                 inputTokens[token1] = window.sumBigNumbers(inputTokens[token1], pool.token1Amount);
             }
         }
-        for (var gift of window.context.gifts) {
+        var contextGifts = window.getNetworkElement("gifts");
+        for (var gift of contextGifts) {
             var index = tokens.indexOf(gift.address);
             Object.keys(window.uniqueAddresses).forEach(() => inputTokens[index] = window.sumBigNumbers(inputTokens[index], gift.amount));
         }
@@ -1410,7 +1401,114 @@ window.dumpData = async function dumpData() {
             Object.values(transaction).forEach(it => console.log(JSON.stringify(it)));
             data.push(transaction);
         }
-        //console.log(JSON.stringify(inputTokens));
-        //console.log(JSON.stringify(outputTokens));
+        var smartContractOutput = {};
+        Object.values(window.involvedTokens).forEach((it, i) => smartContractOutput[it.name] = outputTokens[i]);
+        console.log(JSON.stringify(smartContractOutput));
     }
+
+    for(var address of addresses) {
+        var data = await window.loadStakingElement(address);
+        elaborateData(data);
+    }
+    await finalization();
+};
+
+window.loadStakingElement = async function loadStakingElement(view) {
+    if(!view.props) {
+        view = {
+            props : {
+                element : view
+            },
+            mounted : true
+        }
+    }
+    var stakingContracts = await Promise.all(Object.values(view.props.element.contractDataPromises));
+    if(!view.mounted) {
+        return;
+    }
+    var promises = [];
+    Object.keys(view.props.element).forEach(it => it.indexOf('0x') === 0 && promises.push(...Object.values(view.props.element[it].positions)))
+    var logsArrays = await Promise.all(promises);
+    if(!view.mounted) {
+        return;
+    }
+    var data = {
+        address: view.props.element.address
+    };
+    try {
+        data.redeemed = await window.blockchainCall(window.stakingRedeemContract.methods.redeemed, view.props.element.address);
+        data.finalized = await window.blockchainCall(window.stakingRedeemContract.methods.owner) === window.voidEthereumAddress;
+    } catch(e) {
+    }
+    for(var logs of logsArrays) {
+        for(var log of logs) {
+            data[log.contractData.address] = data[log.contractData.address] || {
+                contractData : log.contractData
+            };
+            data[log.contractData.address][log.poolPosition] = data[log.contractData.address][log.poolPosition] || {
+                i : log.poolPosition,
+                token0 : log.contractData.pools[log.poolPosition].token0,
+                token1 : log.contractData.pools[log.poolPosition].token1,
+                contractData : log.contractData,
+                poolAmount : "0",
+                token0Amount : "0",
+                token1Amount : "0",
+                elements : [],
+                totalPoolAmount : log.contractData.pools[log.poolPosition].poolAmount,
+                totalToken0Amount : log.contractData.pools[log.poolPosition].token0Amount,
+                totalToken1Amount : log.contractData.pools[log.poolPosition].token1Amount,
+                partialReward: '0'
+            };
+            var element = {
+                contractData : log.contractData,
+                token0 : log.contractData.pools[log.poolPosition].token0,
+                token1 : log.contractData.pools[log.poolPosition].token1,
+                poolAmount : log.poolAmount,
+                totalPoolAmount : log.contractData.pools[log.poolPosition].poolAmount,
+                totalToken0Amount : log.contractData.pools[log.poolPosition].token0Amount,
+                totalToken1Amount : log.contractData.pools[log.poolPosition].token1Amount,
+                partialReward : log.partialReward
+            };
+            data[log.contractData.address][log.poolPosition].partialReward = window.web3.utils.toBN(data[log.contractData.address][log.poolPosition].partialReward).add(window.web3.utils.toBN(log.partialReward)).toString();
+            element.poolPercentage = parseInt(element.poolAmount) / parseInt(element.totalPoolAmount);
+            element.poolPercentageString = window.formatMoney(element.poolPercentage * 100) + " %";
+            element.token0Amount = window.numberToString(parseInt(element.totalToken0Amount) * element.poolPercentage).split('.')[0];
+            element.token1Amount = window.numberToString(parseInt(element.totalToken1Amount) * element.poolPercentage).split('.')[0];
+            data[log.contractData.address][log.poolPosition].poolAmount = window.web3.utils.toBN(data[log.contractData.address][log.poolPosition].poolAmount).add(window.web3.utils.toBN(element.poolAmount)).toString();
+            data[log.contractData.address][log.poolPosition].token0Amount = window.web3.utils.toBN(data[log.contractData.address][log.poolPosition].token0Amount).add(window.web3.utils.toBN(element.token0Amount)).toString();
+            data[log.contractData.address][log.poolPosition].token1Amount = window.web3.utils.toBN(data[log.contractData.address][log.poolPosition].token1Amount).add(window.web3.utils.toBN(element.token1Amount)).toString();
+            data[log.contractData.address][log.poolPosition].partialReward = window.sumBigNumbers(data[log.contractData.address][log.poolPosition].partialReward, element.partialReward);
+            data[log.contractData.address][log.poolPosition].elements.push(element);
+        }
+    }
+    data.tokens = {};
+    var tokens = Object.values(window.involvedTokens);
+    for(var i = 0; i < tokens.length; i++) {
+        var token = tokens[i];
+        data.tokens[token.address] = {
+            i,
+            amount : '0',
+            token
+        }
+    }
+    for(var contractData of stakingContracts) {
+        if(!data[contractData.address]) {
+            continue;
+        }
+        var poolPositions = Object.keys(data[contractData.address]).filter(it => !isNaN(it));
+        for(var poolPosition of poolPositions) {
+            data.tokens[data[contractData.address][poolPosition].token0.address].amount = window.sumBigNumbers(data.tokens[data[contractData.address][poolPosition].token0.address].amount, data[contractData.address][poolPosition].token0Amount);
+            data.tokens[data[contractData.address][poolPosition].token1.address].amount = window.sumBigNumbers(data.tokens[data[contractData.address][poolPosition].token1.address].amount, data[contractData.address][poolPosition].token1Amount);
+            data.tokens[data[contractData.address].contractData.token.address].amount = window.sumBigNumbers(data.tokens[data[contractData.address].contractData.token.address].amount, data[contractData.address][poolPosition].partialReward);
+            data[contractData.address][poolPosition].poolPercentage = parseInt(data[contractData.address][poolPosition].poolAmount) / parseInt(data[contractData.address][poolPosition].totalPoolAmount);
+            data[contractData.address][poolPosition].poolPercentageString = window.formatMoney(data[contractData.address][poolPosition].poolPercentage * 100) + " %";
+        }
+    }
+    var contextGifts = window.getNetworkElement("gifts");
+    for(var gift of contextGifts) {
+        data.tokens[gift.address].amount = window.sumBigNumbers(data.tokens[gift.address].amount, gift.amount);
+    }
+    data.tokens = Object.values(data.tokens);
+    view.setState && view.setState({data});
+    return data;
 };

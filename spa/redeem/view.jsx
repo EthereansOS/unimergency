@@ -14,7 +14,8 @@ var Redeem = React.createClass({
     },
     getDefaultSubscriptions() {
         return {
-            "key/set" : key => this.setState({key})
+            "key/set" : key => this.setState({key}),
+            "ethereum/ping" : () => this.controller.loadData()
         }
     },
     render() {

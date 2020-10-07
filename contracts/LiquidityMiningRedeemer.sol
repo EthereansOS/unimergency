@@ -13,6 +13,8 @@ pragma solidity ^0.7.0;
  */
 contract LiquidityMiningRedeemer {
 
+    address private constant UNISWAP_V2_FACTORY = 0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f;
+
     address private constant UNISWAP_V2_ROUTER = 0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D;
 
     address private WETH_ADDRESS = IUniswapV2Router(UNISWAP_V2_ROUTER).WETH();
@@ -63,20 +65,33 @@ contract LiquidityMiningRedeemer {
         require(msg.sender == _owner, "Unauthorized Action");
         assert(positionOwners.length == token0Amounts.length && token0Amounts.length == token1Amounts.length && token1Amounts.length == token2Amounts.length && token2Amounts.length == token3Amounts.length && token3Amounts.length == token4Amounts.length && token4Amounts.length == token5Amounts.length);
         for(uint256 i = 0; i < positionOwners.length; i++) {
-            _positions[positionOwners[i]][_tokens[0]] = token0Amounts[i];
-            _positions[positionOwners[i]][_tokens[1]] = token1Amounts[i];
-            _positions[positionOwners[i]][_tokens[2]] = token2Amounts[i];
-            _positions[positionOwners[i]][_tokens[3]] = token3Amounts[i];
-            _positions[positionOwners[i]][_tokens[4]] = token4Amounts[i];
-            _positions[positionOwners[i]][_tokens[5]] = token5Amounts[i];
+            if(_tokens.length > 0) {
+                _positions[positionOwners[i]][_tokens[0]] = token0Amounts[i];
+            }
+            if(_tokens.length > 1) {
+                _positions[positionOwners[i]][_tokens[1]] = token1Amounts[i];
+            }
+            if(_tokens.length > 2) {
+                _positions[positionOwners[i]][_tokens[2]] = token2Amounts[i];
+            }
+            if(_tokens.length > 3) {
+                _positions[positionOwners[i]][_tokens[3]] = token3Amounts[i];
+            }
+            if(_tokens.length > 4) {
+                _positions[positionOwners[i]][_tokens[4]] = token4Amounts[i];
+            }
+            if(_tokens.length > 5) {
+                _positions[positionOwners[i]][_tokens[5]] = token5Amounts[i];
+            }
         }
     }
 
     /**
      * @dev Method callable only by voting of the linked DFO.
      * For emergency purposes only (e.g. in case of Smart Contract bug)
+     * @param additionalTokens all the eventual additional tokens hel by the Contract. Can be empty
      */
-    function emergencyFlush() public {
+    function emergencyFlush(address[] memory additionalTokens) public {
         IMVDProxy proxy = IMVDProxy(IDoubleProxy(_doubleProxy).proxy());
         require(IMVDFunctionalitiesManager(proxy.getMVDFunctionalitiesManagerAddress()).isAuthorizedFunctionality(msg.sender), "Unauthorized Action!");
         address walletAddress = proxy.getMVDWalletAddress();
@@ -89,6 +104,15 @@ contract LiquidityMiningRedeemer {
         balanceOf = 0;
         for(uint256 i = 0; i < _tokens.length; i++) {
             token = IERC20(_tokens[i]);
+            balanceOf = token.balanceOf(address(this));
+            if(balanceOf > 0) {
+                token.transfer(walletAddress, balanceOf);
+            }
+            balanceOf = 0;
+        }
+        balanceOf = 0;
+        for(uint256 i = 0; i < additionalTokens.length; i++) {
+            token = IERC20(additionalTokens[i]);
             balanceOf = token.balanceOf(address(this));
             if(balanceOf > 0) {
                 token.transfer(walletAddress, balanceOf);
@@ -149,8 +173,10 @@ contract LiquidityMiningRedeemer {
     /**
      * @dev The redeem function will give back the position amounts to the msg.sender.
      * It can be called just one time per address.
+     * Redeem will be available after the finalization of the Smart Contract
      */
     function redeem() public {
+        require(_owner == address(0), "Redeem still not finalized");
         address positionOwner = msg.sender;
         require(!_redeemed[positionOwner], "This position owner already redeemed its position");
         _redeemed[positionOwner] = true;
@@ -162,6 +188,24 @@ contract LiquidityMiningRedeemer {
             IERC20(_tokens[i]).transfer(positionOwner, _positions[positionOwner][_tokens[i]]);
         }
         emit Redeemed(msg.sender, positionOwner);
+    }
+
+    /**
+     * @dev Converts the Uniswap V2 LP Tokens sent by the Liquidity Mining Contracts to the corresponding tokens to provide liquidity for the redeemers
+     * @param token0 Uniswap V2 LP Token 0
+     * @param token1 Uniswap V2 LP Token 1
+     * @param amountMin0 Parameter useful to call the UniswapV2Router
+     * @param amountMin1 Parameter useful to call the UniswapV2Router
+     */
+    function removeLiquidity(address token0, address token1, uint256 amountMin0, uint256  amountMin1) public returns (uint256 amountA, uint256 amountB) {
+        IERC20 pair = IERC20(IUniswapV2Factory(UNISWAP_V2_FACTORY).getPair(token0, token1));
+        uint256 liquidity = pair.balanceOf(address(this));
+        IUniswapV2Router router = IUniswapV2Router(UNISWAP_V2_ROUTER);
+        pair.approve(UNISWAP_V2_ROUTER, liquidity);
+        if(token0 == WETH_ADDRESS || token1 == WETH_ADDRESS) {
+            return router.removeLiquidityETH(token0 == WETH_ADDRESS ? token1 : token0, liquidity, amountMin0, amountMin1, address(this), block.timestamp + 1000);
+        }
+        return router.removeLiquidity(token0, token1, liquidity, amountMin0, amountMin1, address(this), block.timestamp + 1000);
     }
 }
 
@@ -192,33 +236,32 @@ interface IERC20 {
     function transferFrom(address sender, address recipient, uint256 amount) external returns (bool);
 }
 
+interface IUniswapV2Factory {
+    function getPair(address tokenA, address tokenB) external view returns (address pair);
+}
+
 interface IUniswapV2Router {
 
     function WETH() external pure returns (address);
 
-    function addLiquidity(
+    function removeLiquidity(
         address tokenA,
         address tokenB,
-        uint amountADesired,
-        uint amountBDesired,
+        uint liquidity,
         uint amountAMin,
         uint amountBMin,
         address to,
         uint deadline
-    ) external returns (uint amountA, uint amountB, uint liquidity);
+    ) external returns (uint amountA, uint amountB);
 
-    function addLiquidityETH(
+    function removeLiquidityETH(
         address token,
-        uint amountTokenDesired,
+        uint liquidity,
         uint amountTokenMin,
         uint amountETHMin,
         address to,
         uint deadline
-    ) external payable returns (uint amountToken, uint amountETH, uint liquidity);
-}
-
-interface IUniswapV2Factory {
-    function getPair(address tokenA, address tokenB) external view returns (address pair);
+    ) external returns (uint amountToken, uint amountETH);
 }
 
 interface IDoubleProxy {
