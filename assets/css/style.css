@@ -193,3 +193,22 @@ a {cursor: pointer !important;}
 
 .GiGiELaCremeria {color: #787878; margin: 30px auto; font-size: 19px;}
 .ExpTop a {color: rgb(255, 0, 122);}
+
+.walletlist {width: 100%; display: inline-block; margin: 10px auto;}
+.walletlist h1 {font-size: 20px; margin: 30px auto; display: inline-block; color: rgb(255, 0, 122); width: 100%;}
+.walletlist ul {width: 90%; max-width: 900px; display: inline-block; margin: 10px auto; word-break: break-all;}
+.walletlist ul li {text-align: left; width: 46%; margin: 10px 10px; display: inline-block;}
+.walletlist ul li a {width: 90%; font-size: 15px; color: #4f4f4f; display: inline-block; margin: auto 5px; vertical-align: middle;}
+.returnbackbrah {width: 98%; text-align: left; padding: 10px 1%; font-size: 14px; color: rgb(255, 0, 122); display: inline-block;}
+
+.YOURVOTE {width: 300px; padding: 1em; background-color: rgb(255, 255, 255);box-shadow: rgba(0, 0, 0, 0.01) 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 4px 8px, rgba(0, 0, 0, 0.04) 0px 16px 24px, rgba(0, 0, 0, 0.01) 0px 24px 32px; border-radius: 30px; display: block; margin: 30px auto; clear: both;}
+.YOURVOTE h5 {font-size: 20px; color: #01182b; margin: 15px auto;}
+.YOURVOTE h4 {font-size: 20px; color: #01182b; margin: 15px auto;}
+.YOURVOTE h6 {font-size: 16px; color: #303030; margin: 15px auto;}
+.YOURVOTE p {font-size: 15px; color: #303030; margin: 15px 8px 5px 8px;}
+.YOURVOTE a {color: rgb(255, 0, 122);}
+.YOURVOTE input {width: 100px; border-radius: 20px;border: 1px solid rgb(247, 248, 250);background-color: rgb(228, 228, 228); font-size: 15px; margin: auto 10px; padding: 5px;}
+.YOURVOTE select {width: 100px; border-radius: 20px;border: 1px solid rgb(247, 248, 250);background-color: rgb(228, 228, 228);font-size: 13px; padding: 5px;}
+.YOURVOTE span {text-align: center; font-size: 13px; width: 250px; display: inline-block; margin: 10px 0; color: #787878;}
+.APPROVEBTN {width: 250px; background-color: rgb(255, 0, 122);color: white !important;cursor: auto;box-shadow: none;border: 1px solid transparent;outline: none;opacity: 1;padding: 18px;border-radius: 12px;font-weight: 500;text-decoration: none;}
+.VTNBTN {display: inline-block; width: 103px; margin: 10px 4px;background-color: rgb(255, 0, 122);color: white !important;cursor: auto;box-shadow: none;border: 1px solid transparent;outline: none;opacity: 1;padding: 18px;border-radius: 12px;font-weight: 500; text-decoration: none;}

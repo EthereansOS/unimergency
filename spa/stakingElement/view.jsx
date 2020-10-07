@@ -8,14 +8,12 @@ var StakingElement = React.createClass({
     render() {
         var _this = this;
         return (<section>
-            <h3>
-                <span>
-                    <a target="_blank" href={"https://etherscan.io/address/" + this.props.element.address}>{this.props.element.address}</a>
-                    {!window.walletAddress && <a href="javascript:;" onClick={this.props.onClose}>X</a>}
-                </span>
+                <a href="javascript:;" className="returnbackbrah" onClick={this.props.onClose}>⬅️ All</a>
+                <h3></h3>
+                <a target="_blank" href={"https://etherscan.io/address/" + this.props.element.address}>{this.props.element.address}</a>
                 {(!this.state || !this.state.data) && <BigLoader/>}
                 {this.state && this.state.data && <section>
-                    <ul>
+                    <ul className="YOURVOTE">
                         {Object.keys(this.state.data).filter(it => it.indexOf("0x") === 0).map(key => <li key={key}>
                             <h2>{_this.state.data[key].contractData.name} Liquidity Mining Contract</h2>
                             <ul>
@@ -60,7 +58,6 @@ var StakingElement = React.createClass({
                         </ul>
                     </section>}
                 </section>}
-            </h3>
         </section>);
     }
 });

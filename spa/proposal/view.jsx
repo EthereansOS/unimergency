@@ -41,6 +41,22 @@ var Proposal = React.createClass({
             <section>
                 {this.state && <section className="LEADERSFINALAll">
                     <section>
+                    {!window.walletAddress && <section className="Actions YOURVOTE">
+                            <section className="Buttons">
+                                <a className="APPROVEBTN" href="javascript:;" onClick={() => window.ethereum.enable().then(this.controller.loadData)}>Connect</a>
+                            </section>
+                        </section>}
+                        {window.walletAddress && this.state.voted && <section className="YOURVOTE">
+                            <h5>Withdraw for Survey participants</h5>
+                            {this.state.votingTokens.map((it, i) => <p key={it.address}>
+                                {window.fromDecimals(parseInt(_this.state.myVotes.accepts[i]) + parseInt(_this.state.myVotes.refuses[i]), it.decimals)} {it.symbol}
+                            </p>)}
+                            <p>You'll be able to redeem your tokens here at <a target="_blank" href={window.getNetworkElement("etherscanURL") + "block/" + this.state.endBlock}>the end of the Proposal</a></p>
+                            {this.state.terminated && !this.state.redeemed && window.walletAddress && <section className="Buttons">
+                                {this.state.performing !== 'redeem' && <a className={"APPROVEBTN" + (this.state.performing ? " Disabled" : "")} href="javascript:;" data-action="redeem" onClick={this.perform}>Redeem</a>}
+                                {this.state.performing === 'redeem' && <GhostLoader />}
+                            </section>}
+                        </section>}
                         <section className="Status">
                             {!this.state.started && <h2>
                                 The survey will start at block <a target="_blank" href={window.getNetworkElement("etherscanURL") + "block/" + this.state.startBlock}>#{this.state.startBlock}</a>
@@ -57,24 +73,7 @@ var Proposal = React.createClass({
                                 <h4>{window.fromDecimals(this.state.votes[1], 18).split('.')[0]} Refuse</h4>
                             </section>}
                         </section>
-                        {!window.walletAddress && <section className="Actions YOURVOTE">
-                            <section className="Buttons">
-                                <a className="APPROVEBTN" href="javascript:;" onClick={() => window.ethereum.enable().then(this.controller.loadData)}>Connect</a>
-                            </section>
-                        </section>}
-                        {window.walletAddress && this.state.voted && <section className="YOURVOTE">
-                            <h5>Your Votes:</h5>
-                            <h6>{window.fromDecimals(this.state.myVotes.accepts.length === 0 ? '0' : this.state.myVotes.accepts.reduce((a, b) => parseInt(a) + parseInt(b)), 18).split('.')[0]} Accept</h6>
-                            <h6>{window.fromDecimals(this.state.myVotes.refuses.length === 0 ? '0' : this.state.myVotes.refuses.reduce((a, b) => parseInt(a) + parseInt(b)), 18).split('.')[0]} Refuse</h6>
-                            {this.state.votingTokens.map((it, i) => <p key={it.address}>
-                                {window.fromDecimals(parseInt(_this.state.myVotes.accepts[i]) + parseInt(_this.state.myVotes.refuses[i]), it.decimals)} {it.symbol}
-                            </p>)}
-                            <p>You'll be able to redeem your tokens here at <a target="_blank" href={window.getNetworkElement("etherscanURL") + "block/" + this.state.endBlock}>the end of the Proposal</a></p>
-                            {this.state.terminated && !this.state.redeemed && window.walletAddress && <section className="Buttons">
-                                {this.state.performing !== 'redeem' && <a className={"APPROVEBTN" + (this.state.performing ? " Disabled" : "")} href="javascript:;" data-action="redeem" onClick={this.perform}>Redeem</a>}
-                                {this.state.performing === 'redeem' && <GhostLoader />}
-                            </section>}
-                        </section>}
+                        
                     </section>
                 </section>}
                 <section className="ExpTop">

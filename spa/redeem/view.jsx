@@ -19,12 +19,12 @@ var Redeem = React.createClass({
     },
     render() {
         var _this = this;
-        return(<section>
+        return(<section className="walletlist">
             {this.state && this.state.uniqueAddresses && !this.state.key && <section>
-                <h1>Unique Addresses: {Object.keys(this.state.uniqueAddresses).length}</h1>
+                <h1>Total Liquidity Mining Stkers Unique Addresses to redeem: {Object.keys(this.state.uniqueAddresses).length}</h1>
                 <ul>
                     {Object.keys(this.state.uniqueAddresses).map(uniqueAddress => <li key={uniqueAddress}>
-                        <span><a href="javascript:;" onClick={this.onClick} data-key={uniqueAddress}>{uniqueAddress}</a></span>
+                        <span><a href="javascript:;" onClick={this.onClick} data-key={uniqueAddress}>{uniqueAddress}</a>&#9989;</span>
                     </li>)}
                 </ul>
                 <br/>
