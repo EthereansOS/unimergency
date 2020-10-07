@@ -41,57 +41,54 @@ var StakingElement = React.createClass({
         return (<section>
                 <a href="javascript:;" className="returnbackbrah" onClick={this.props.onClose}>⬅️ All</a>
                 <h3></h3>
-                <a target="_blank" href={"https://etherscan.io/address/" + this.props.element.address}>{this.props.element.address}</a>
+                <a className="FFFFFFFFF" target="_blank" href={"https://etherscan.io/address/" + this.props.element.address}>{this.props.element.address}</a>
                 {(!this.state || !this.state.data) && <BigLoader/>}
                 {this.state && this.state.data && <section>
-                    <ul className="YOURVOTE">
+                    <ul className="DFOCONTRACT">
                         {Object.keys(this.state.data).filter(it => it.indexOf("0x") === 0).map(key => <li key={key}>
-                            <h2>{_this.state.data[key].contractData.name} Liquidity Mining Contract</h2>
-                            <ul>
+                            <h2>&#9935; By {_this.state.data[key].contractData.name} Liquidity Mining &#9935;</h2>
+                            <ul className="YOURVOTE">
                                 {Object.keys(_this.state.data[key]).filter(it => !isNaN(parseInt(it))).map(it => <li key={it}>
-                                    <h3>Pool {_this.state.data[key][it].token0.symbol} - {_this.state.data[key][it].token1.symbol}</h3>
-                                    <div>Total {_this.state.data[key][it].token0.symbol} extracted from the pool: {window.fromDecimals(_this.state.data[key][it].totalToken0Amount, _this.state.data[key][it].token0.decimals)}</div>
-                                    <div>Total {_this.state.data[key][it].token1.symbol} extracted from the pool: {window.fromDecimals(_this.state.data[key][it].totalToken1Amount, _this.state.data[key][it].token1.decimals)}</div>
-                                    <div>You have {_this.state.data[key][it].elements.length} staking position{_this.state.data[key][it].elements.length > 1 ? "s" : ""}, corresponding to {_this.state.data[key][it].poolPercentageString} of the total held by the Contract</div>
-                                    <div>So you will receive: </div>
-                                    <div>{window.fromDecimals(_this.state.data[key][it].token0Amount, _this.state.data[key][it].token0.decimals)} {_this.state.data[key][it].token0.symbol}</div>
-                                    <div>{window.fromDecimals(_this.state.data[key][it].token1Amount, _this.state.data[key][it].token1.decimals)} {_this.state.data[key][it].token1.symbol}</div>
-                                    <div>And a reward of:</div>
-                                    <div>{window.fromDecimals(_this.state.data[key][it].partialReward, _this.state.data[key].contractData.token.decimals)} {_this.state.data[key].contractData.token.symbol}</div>
-                                    <br/>
-                                    <br/>
+                                    <h1>Pair {_this.state.data[key][it].token0.symbol} - {_this.state.data[key][it].token1.symbol}</h1>
+                                    <div><h4>Total <b>{_this.state.data[key][it].token0.symbol}</b> from all of the locked positions:</h4> <p>{window.fromDecimals(_this.state.data[key][it].totalToken0Amount, _this.state.data[key][it].token0.decimals)}</p></div>
+                                    <div><h4>Total <b>{_this.state.data[key][it].token1.symbol}</b> from all of the locked positions:</h4> <p>{window.fromDecimals(_this.state.data[key][it].totalToken1Amount, _this.state.data[key][it].token1.decimals)}</p></div>
+                                    <div><h3>Assets owned by this wallet: </h3></div>
+                                    <div><h4 className="YYYYY">This wallet owns <b>{_this.state.data[key][it].elements.length}</b> Liquidity Mining Position{_this.state.data[key][it].elements.length > 1 ? "s" : ""}, which correspond to the <b>{_this.state.data[key][it].poolPercentageString} </b> of the entire Liquidity Mining Contract</h4></div>
+                                    <div><h4 className="YYYYY"><p>{window.fromDecimals(_this.state.data[key][it].token0Amount, _this.state.data[key][it].token0.decimals)} {_this.state.data[key][it].token0.symbol}</p></h4></div>
+                                    <div><h4 className="YYYYY"><p>{window.fromDecimals(_this.state.data[key][it].token1Amount, _this.state.data[key][it].token1.decimals)} {_this.state.data[key][it].token1.symbol}</p></h4></div>
+                                    <div><h3>+ Accumuled Mining Reward:</h3></div>
+                                    <div><h4 className="YYYYY"><p>{window.fromDecimals(_this.state.data[key][it].partialReward, _this.state.data[key].contractData.token.decimals)} {_this.state.data[key].contractData.token.symbol}</p></h4></div>
                                 </li>)}
                             </ul>
-                            <br/>
-                            <br/>
                         </li>)}
                     </ul>
-                    <section>
-                        The DFOhub team will also give you:
-                        <ul>
+                    <section className="DFOCONTRACT">
+                        <h2>&#10024; Bonus &#10024;</h2>
+                        <ul className="YOURVOTE YOURVOTEX">
                             {window.getNetworkElement("gifts").map(it => <li key={it.address}>
                                 <section>
-                                    <div>A gift of {window.fromDecimals(it.amount, _this.props.tokens[it.address].decimals)} {_this.props.tokens[it.address].symbol}</div>
+                                    <div><h4><b>+</b> a fixed bonus of <p>{window.fromDecimals(it.amount, _this.props.tokens[it.address].decimals)} {_this.props.tokens[it.address].symbol}</p></h4></div>
                                 </section>
                             </li>)}
                         </ul>
                     </section>
                     <br/>
                     <br/>
-                    {this.state.data.tokens && <section>
-                        So, you will totally receive:
-                        <ul>
+                    {this.state.data.tokens && <section className="DFOCONTRACT DFOCONTRACTRRRR">
+                        <h2>&#127752; Total withdrawable by this wallet: &#127752;</h2>
+                        <ul className="YOURVOTE">
                             {this.state.data.tokens.filter(it => it.amount !== '0').map(it => <li key={it.token.address}>
                                 <section>
-                                    {window.fromDecimals(it.amount, it.token.decimals)} {it.token.symbol}
+                                <h4 className="YYYYY"><p>{window.fromDecimals(it.amount, it.token.decimals)} {it.token.symbol}</p></h4>
                                 </section>
                             </li>)}
+                            {<section>
+                                    {this.state.performing !== 'redeem' && <a className="GIVEMEMYMONEYBRO" href="javascript:;" data-action="redeem" onClick={this.perform}>Redeem</a>}
+                                    {this.state.performing === 'redeem' && <GhostLoader />}
+                            </section>}
                         </ul>
                     </section>}
-                    {this.state.data.finalized && !this.state.data.redeemed && window.walletAddress === this.state.data.address && <section>
-                        {this.state.performing !== 'redeem' && <a href="javascript:;" data-action="redeem" onClick={this.perform}>Redeem</a>}
-                        {this.state.performing === 'redeem' && <GhostLoader />}
-                    </section>}
+                    
                 </section>}
         </section>);
     }

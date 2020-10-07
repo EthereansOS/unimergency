@@ -201,8 +201,9 @@ a {cursor: pointer !important;}
 .walletlist ul li a {width: 90%; font-size: 15px; color: #4f4f4f; display: inline-block; margin: auto 5px; vertical-align: middle;}
 .returnbackbrah {width: 98%; text-align: left; padding: 10px 1%; font-size: 14px; color: rgb(255, 0, 122); display: inline-block;}
 
-.YOURVOTE {width: 300px; padding: 1em; background-color: rgb(255, 255, 255);box-shadow: rgba(0, 0, 0, 0.01) 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 4px 8px, rgba(0, 0, 0, 0.04) 0px 16px 24px, rgba(0, 0, 0, 0.01) 0px 24px 32px; border-radius: 30px; display: block; margin: 30px auto; clear: both;}
+.YOURVOTE {width: 300px !important; max-width: 300px !important; display: block !important; padding: 1em; background-color: rgb(255, 255, 255);box-shadow: rgba(0, 0, 0, 0.01) 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 4px 8px, rgba(0, 0, 0, 0.04) 0px 16px 24px, rgba(0, 0, 0, 0.01) 0px 24px 32px; border-radius: 30px; display: block; margin: 30px auto; clear: both;}
 .YOURVOTE h5 {font-size: 20px; color: #01182b; margin: 15px auto;}
+.YOURVOTE h1 {font-size: 30px; color: #01182b; margin: 15px auto; width: 100%; display: inline-block; text-align: center;}
 .YOURVOTE h4 {font-size: 20px; color: #01182b; margin: 15px auto;}
 .YOURVOTE h6 {font-size: 16px; color: #303030; margin: 15px auto;}
 .YOURVOTE p {font-size: 15px; color: #303030; margin: 15px 8px 5px 8px;}
@@ -212,3 +213,23 @@ a {cursor: pointer !important;}
 .YOURVOTE span {text-align: center; font-size: 13px; width: 250px; display: inline-block; margin: 10px 0; color: #787878;}
 .APPROVEBTN {width: 250px; background-color: rgb(255, 0, 122);color: white !important;cursor: auto;box-shadow: none;border: 1px solid transparent;outline: none;opacity: 1;padding: 18px;border-radius: 12px;font-weight: 500;text-decoration: none;}
 .VTNBTN {display: inline-block; width: 103px; margin: 10px 4px;background-color: rgb(255, 0, 122);color: white !important;cursor: auto;box-shadow: none;border: 1px solid transparent;outline: none;opacity: 1;padding: 18px;border-radius: 12px;font-weight: 500; text-decoration: none;}
+.YOURVOTE li {width: 98% !important; margin: 10px 0 !important;}
+.FFFFFFFFF {color: rgb(255, 0, 122); margin: 30px auto; display: inline-block;}
+.DFOCONTRACT h2 {color: #4f4f4f; word-break: keep-all !important; display: block; margin: 0 auto -50px auto; text-align: center; padding: 20px 15px 50px 15px; background-color: #eaeaea; width: 300px; border-radius: 25px;box-shadow: rgba(0, 0, 0, 0.01) 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 4px 8px, rgba(0, 0, 0, 0.04) 0px 16px 24px, rgba(0, 0, 0, 0.01) 0px 24px 32px}
+.DFOCONTRACT .YOURVOTE {word-break: keep-all !important; text-align: center !important;}
+.YOURVOTE h3 {text-align: center; width: 100%; display: inline-block; color: rgb(255, 0, 122);}
+.DFOCONTRACT .YOURVOTE h4 {font-size: 15px; width: 100%; display: inline-block; text-align: center;margin: 10px auto 3px auto !important; font-weight: normal;color: #787878;}
+.DFOCONTRACT .YOURVOTE p {font-size: 16px;width: 100%; display: inline-block; text-align: center; font-weight: bold; color: #787878; margin: 5px auto 10px auto !important;}
+.YYYYY, .YYYYY p {color: #303030 !important;}
+.YOURVOTEX {background-color: rgb(255, 0, 122);}
+.YOURVOTEX h4, .YOURVOTEX h4 p {color: #f1f1f1 !important; margin: 0;}
+.YOURVOTEX li {margin: 0 !important;}
+.GIVEMEMYMONEYBRO {width: 250px; background-image: linear-gradient(90deg, #00C0FF 0%, #FFCF00 49%, #FC4F4F 80%, #00C0FF 100%);color: #ffffff !important; text-shadow: #c0c0c0 1px 1px; text-decoration: ; cursor: auto;box-shadow: none;border: 1px solid transparent;outline: none;opacity: 1;padding: 18px;border-radius: 12px;font-weight: 500;text-decoration: none; display: inline-block;animation:slidebg 5s linear infinite;}
+@keyframes slidebg {
+    to {
+      background-position:20vw;
+    }
+  }
+.DFOCONTRACTRRRR .YOURVOTE h4 {margin: 2px auto 2px auto !important;}
+.DFOCONTRACTRRRR .YOURVOTE p {margin: 2px auto 2px auto !important;}
+.DFOCONTRACTRRRR .YOURVOTE ul li {margin: 2px 0 !important;}
