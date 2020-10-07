@@ -29,7 +29,7 @@
     "defaultCharsAmount" : 90,
     "transactionConfirmations": 0,
     "transactionConfirmationsTimeoutMillis": 7000,
-    "snapshotBlock" : 1000000000,
+    "snapshotBlock" : 11016666,
     "stakingContractData" : [{
         "name" : "DFOhub",
         "address" : "0xb81DDC1BCB11FC722d6F362F4357787E6F958ce0",

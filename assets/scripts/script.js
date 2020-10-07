@@ -1402,7 +1402,7 @@ window.dumpData = async function dumpData() {
             data.push(transaction);
         }
         var smartContractOutput = {};
-        Object.values(window.involvedTokens).forEach((it, i) => smartContractOutput[it.name] = outputTokens[i]);
+        Object.values(window.involvedTokens).forEach((it, i) => smartContractOutput[it.symbol] = outputTokens[i]);
         console.log(JSON.stringify(smartContractOutput));
     }
 
