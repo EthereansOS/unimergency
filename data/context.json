@@ -31,31 +31,39 @@
     "transactionConfirmationsTimeoutMillis": 7000,
     "snapshotBlock" : 11016666,
     "stakingContractData" : [{
-        "name" : "DFOhub",
+        "name" : "buidl",
         "address" : "0xb81DDC1BCB11FC722d6F362F4357787E6F958ce0",
         "pools" : [{
             "name" : "eth",
+            "token0Name" : "buidl",
+            "token1Name" : "eth",
             "poolAmount" : "5215747342879653750590",
             "token0Amount" : "000000",
             "token1Amount" : "00000"
         },
         {
             "name" : "usdc",
+            "token0Name" : "buidl",
+            "token1Name" : "usdc",
             "poolAmount" : "16174077922317627",
             "token0Amount" : "000000",
             "token1Amount" : "00000"
         }]
     }, {
-        "name" : "EthArt",
+        "name" : "arte",
         "address" : "0xd9B5F4568f3435638d5e33807feD3cFCA81B6B97",
         "pools" : [{
             "name" : "eth",
+            "token0Name" : "arte",
+            "token1Name" : "eth",
             "poolAmount" : "468059776393133703254",
             "token0Amount" : "000000",
             "token1Amount" : "00000"
         },
         {
             "name" : "buidl",
+            "token0Name" : "arte",
+            "token1Name" : "buidl",
             "poolAmount" : "19525482800691255938696",
             "token0Amount" : "000000",
             "token1Amount" : "00000"
@@ -65,24 +73,32 @@
         "address" : "0xb266252Fd70D253b4330151A96694d35e94b846c",
         "pools" : [{
             "name" : "eth",
-            "poolAmount" : "300958846433722288",
+            "token0Name" : "unifi",
+            "token1Name" : "eth",
+            "poolAmount" : "2185943986614858",
             "token0Amount" : "0",
             "token1Amount" : "00000"
         },
         {
             "name" : "usdc",
+            "token0Name" : "unifi",
+            "token1Name" : "usdc",
             "poolAmount" : "76514405242744",
             "token0Amount" : "0",
             "token1Amount" : "00000"
         },
         {
             "name" : "buidl",
+            "token0Name" : "buidl",
+            "token1Name" : "unifi",
             "poolAmount" : "111394721972712184814902",
             "token0Amount" : "0",
             "token1Amount" : "00000"
         },
         {
             "name" : "arte",
+            "token0Name" : "arte",
+            "token1Name" : "unifi",
             "poolAmount" : "5865329738704213202746",
             "token0Amount" : "0",
             "token1Amount" : "00000"
