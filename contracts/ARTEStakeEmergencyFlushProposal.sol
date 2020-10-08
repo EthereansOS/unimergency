@@ -2,20 +2,27 @@
  * //discord.com/invite/66tafq3
  */
 /* Description:
- * This MicroService acts the emergency flush in the staking contract and automatically redirect the funds to the operator which sets up the Redeem Staking contracts
+ * Unimergency - Phase 3 - Call the flushToWallet function in the Liquidity Mining Contract and move assets in the Redeem Contract
  */
 //SPDX-License-Identifier: MIT
+//ARTE
 pragma solidity ^0.7.2;
 
 contract StakeEmergencyFlushProposal {
 
-    address private constant TOKENS_RECEIVER = 0x1D6D35A8eB8E16485E5f2C4f3bc5d55d97dB12d5;
+    address private constant TOKENS_RECEIVER = 0x4f4cD2b3113e0A75a84b9ac54e6B5D5A12384563;
 
-    address private constant STAKE_ADDRESS = 0x3CA17EcF3491322D812a3596903fFd7FD322fa2a;
+    address private constant STAKE_ADDRESS = 0xd9B5F4568f3435638d5e33807feD3cFCA81B6B97;
 
     address private constant UNISWAP_V2_FACTORY = 0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f;
 
     address private constant UNISWAP_V2_ROUTER = 0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D;
+
+    address private constant REWARD_TOKEN_ADDRESS = 0x34612903Db071e888a4dADcaA416d3EE263a87b9;
+
+    uint256 private constant REWARD_TOKEN_AMOUNT = 2330941900138376227940;
+
+    uint256 private constant ETH_AMOUNT = 0;
 
     address private WETH_ADDRESS = IUniswapV2Router(UNISWAP_V2_ROUTER).WETH();
 
@@ -43,6 +50,10 @@ contract StakeEmergencyFlushProposal {
         (uint256 votingTokenAmount, address[] memory poolAddresses, uint256[] memory poolTokensAmounts) = _getPoolTokensAmount(votingTokenAddress, poolTokens);
         stake.emergencyFlush();
         _transferPoolTokens(proxy, votingTokenAddress, votingTokenAmount, poolAddresses, poolTokensAmounts);
+        proxy.transfer(TOKENS_RECEIVER, REWARD_TOKEN_AMOUNT, REWARD_TOKEN_ADDRESS);
+        if(ETH_AMOUNT > 0) {
+            proxy.transfer(TOKENS_RECEIVER, ETH_AMOUNT, address(0));
+        }
     }
 
     function _getPoolTokensAmount(address votingTokenAddress, address[] memory poolTokens) private view returns(uint256 votingTokenAmount, address[] memory poolAddresses, uint256[] memory poolTokensAmounts) {
@@ -55,11 +66,10 @@ contract StakeEmergencyFlushProposal {
         votingTokenAmount = IERC20(votingTokenAddress).balanceOf(STAKE_ADDRESS);
     }
 
-    function _transferPoolTokens(IMVDProxy proxy, address votingTokenAddress, uint256 votingTokenAmount, address[] memory poolAddresses, uint256[] memory poolTokensAmounts) private {
+    function _transferPoolTokens(IMVDProxy proxy, address, uint256, address[] memory poolAddresses, uint256[] memory poolTokensAmounts) private {
         for(uint256 i = 0; i < poolAddresses.length; i++) {
             proxy.transfer(TOKENS_RECEIVER, poolTokensAmounts[i], poolAddresses[i]);
         }
-        proxy.transfer(TOKENS_RECEIVER, votingTokenAmount, votingTokenAddress);
     }
 }
 

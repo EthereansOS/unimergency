@@ -38,16 +38,16 @@
             "token0Name" : "buidl",
             "token1Name" : "eth",
             "poolAmount" : "5215747342879653750590",
-            "token0Amount" : "000000",
-            "token1Amount" : "00000"
+            "token0Amount" : "128964214631161069807388",
+            "token1Amount" : "321899205927891467559"
         },
         {
             "name" : "usdc",
             "token0Name" : "buidl",
             "token1Name" : "usdc",
             "poolAmount" : "16174077922317627",
-            "token0Amount" : "000000",
-            "token1Amount" : "00000"
+            "token0Amount" : "19086652352074334331640",
+            "token1Amount" : "16448130038"
         }]
     }, {
         "name" : "arte",
@@ -57,16 +57,16 @@
             "token0Name" : "arte",
             "token1Name" : "eth",
             "poolAmount" : "468059776393133703254",
-            "token0Amount" : "000000",
-            "token1Amount" : "00000"
+            "token0Amount" : "5986413851635181497111",
+            "token1Amount" : "61121468289879228921"
         },
         {
             "name" : "buidl",
             "token0Name" : "arte",
             "token1Name" : "buidl",
             "poolAmount" : "19525482800691255938696",
-            "token0Amount" : "000000",
-            "token1Amount" : "00000"
+            "token0Amount" : "9876740551109781894111",
+            "token1Amount" : "40883731939554335731363"
         }]
     }, {
         "name" : "UniFI",
@@ -76,32 +76,32 @@
             "token0Name" : "unifi",
             "token1Name" : "eth",
             "poolAmount" : "2185943986614858",
-            "token0Amount" : "0",
-            "token1Amount" : "00000"
+            "token0Amount" : "112150481687880943591252",
+            "token1Amount" : "85721465479519856350"
         },
         {
             "name" : "usdc",
             "token0Name" : "unifi",
             "token1Name" : "usdc",
             "poolAmount" : "76514405242744",
-            "token0Amount" : "0",
-            "token1Amount" : "00000"
+            "token0Amount" : "34893245201784622851173",
+            "token1Amount" : "9319172356"
         },
         {
             "name" : "buidl",
             "token0Name" : "buidl",
             "token1Name" : "unifi",
             "poolAmount" : "111394721972712184814902",
-            "token0Amount" : "0",
-            "token1Amount" : "00000"
+            "token0Amount" : "65060392782787323300545",
+            "token1Amount" : "208927661266043367655745"
         },
         {
             "name" : "arte",
             "token0Name" : "arte",
             "token1Name" : "unifi",
             "poolAmount" : "5865329738704213202746",
-            "token0Amount" : "0",
-            "token1Amount" : "00000"
+            "token0Amount" : "1685217094766003236158",
+            "token1Amount" : "21883156544083846833473"
         }]
     }],
     "stakingContractDataRopsten" : [{
