@@ -1346,12 +1346,26 @@ window.dumpData = async function dumpData() {
         }
     };
 
-    var elaborateData = function elaborateData(data) {
+    var blockchainElements = {};
+
+    var blockchainTokens = await window.blockchainCall(window.liquidityMiningRedeemContract.methods.tokens);
+
+    var elaborateData = async function elaborateData(data) {
         var position = getArrayPosition();
         var element = {
             address: data.address
         }
+        blockchainElements[data.address] = {
+            address : data.address,
+            tokens : {}
+        };
+        var blockchainPosition = await window.blockchainCall(window.liquidityMiningRedeemContract.methods.position, data.address);
         for (var token of data.tokens) {
+            blockchainElements[data.address].tokens[token.token.name] = {
+                procedure : token.amount,
+                blockchain : blockchainPosition[blockchainTokens.indexOf(token.token.address)]
+            };
+            blockchainElements[data.address].tokens[token.token.name].collimation = blockchainElements[data.address].tokens[token.token.name].procedure === blockchainElements[data.address].tokens[token.token.name].blockchain;
             element[token.token.address] = token.amount;
         }
         arrays[position].push(element);
@@ -1361,7 +1375,9 @@ window.dumpData = async function dumpData() {
         var tokens = Object.keys(window.involvedTokens);
         var inputTokens = [];
         var outputTokens = [];
-        tokens.forEach(() => {
+        var calculated = {};
+        tokens.forEach(it => {
+            calculated[window.involvedTokens[it].symbol] = '0';
             inputTokens.push("0");
             outputTokens.push("0");
         });
@@ -1393,6 +1409,7 @@ window.dumpData = async function dumpData() {
             for (var element of array) {
                 transaction.addresses.push(element.address);
                 for (var i = 0; i < tokens.length; i++) {
+                    calculated[window.involvedTokens[tokens[i]].symbol] = window.sumBigNumbers(calculated[window.involvedTokens[tokens[i]].symbol], element[tokens[i]]);
                     outputTokens[i] = window.sumBigNumbers(outputTokens[i], element[tokens[i]]);
                     transaction["token" + i].push(element[tokens[i]]);
                 }
@@ -1403,12 +1420,14 @@ window.dumpData = async function dumpData() {
         }
         var smartContractOutput = {};
         Object.values(window.involvedTokens).forEach((it, i) => smartContractOutput[it.symbol] = outputTokens[i]);
-        console.log(JSON.stringify(smartContractOutput));
+        console.log("Cumulative", JSON.stringify(smartContractOutput));
+        console.log("Calculated", JSON.stringify(calculated));
+        console.log(JSON.stringify(blockchainElements));
     }
 
     for(var address of addresses) {
         var data = await window.loadStakingElement(address);
-        elaborateData(data);
+        await elaborateData(data);
     }
     await finalization();
 };

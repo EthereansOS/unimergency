@@ -12,7 +12,7 @@
     "etraTokenAddress": "0xA0A5bb7B563461A586C1bd6D635Ba9Fde7315008",
     "etraTokenAddressRopsten": "0xA30045794932Fe45D65bD86c998807A39AeE8019",
     "robeAddress": "0x74Ef70357ef21BaD2b45795679F2727C48d501ED",
-    "liquidityMiningRedeemAddress" : "0xe433BA892f0E873A41aF6b307d6d6419d013877c",
+    "liquidityMiningRedeemAddress" : "0x4f4cD2b3113e0A75a84b9ac54e6B5D5A12384563",
     "liquidityMiningRedeemAddressRopsten" : "0xf9e7A4d85100306c32096666061Bb6da5a44a66c",
     "openSeaURL" : "https://opensea.io/assets/",
     "infuraNode" : "https://mainnet.infura.io/v3/74534c65c1014f218c56310884ce0264",
