@@ -57,9 +57,12 @@ var UnimergencyController = function (view) {
     context.loadStakingContractData = async function loadStakingContractData(contractData, tokens) {
         var loadedContractData = JSON.parse(JSON.stringify(contractData));
         loadedContractData.contract = window.newContract(window.context.StakeABI, loadedContractData.address);
-        var doubleProxy = window.newContract(window.context.DoubleProxyABI, await window.blockchainCall(loadedContractData.contract.methods.doubleProxy));
-        var proxy = window.newContract(window.context.ProxyABI, await window.blockchainCall(doubleProxy.methods.proxy));
-        var tokenAddress = await window.blockchainCall(proxy.methods.getToken);
+        var tokenAddress = loadedContractData.token;
+        if(!tokenAddress) {
+            var doubleProxy = window.newContract(window.context.DoubleProxyABI, await window.blockchainCall(loadedContractData.contract.methods.doubleProxy));
+            var proxy = window.newContract(window.context.ProxyABI, await window.blockchainCall(doubleProxy.methods.proxy));
+            tokenAddress = await window.blockchainCall(proxy.methods.getToken);
+        }
         tokenAddress = window.web3.utils.toChecksumAddress(tokenAddress);
         loadedContractData.token = tokens[tokenAddress] = tokens[tokenAddress] || await window.loadTokenInfos(tokenAddress);
         var pools = await window.blockchainCall(loadedContractData.contract.methods.tokens);
