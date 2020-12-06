@@ -43,7 +43,7 @@ var Index = React.createClass({
                     <section className="HActions">
                         <a href="https://discord.gg/FPcZpxB" target="_Blank">#AMA</a>
                         <a href="https://github.com/b-u-i-d-l/unimergency" target="_Blank">#github</a>
-                        <a href={window.getNetworkElement("etherscanURL") + "address/" + window.getNetworkElement("quickscopeVoteAddress")} target="_blank">#etherscan</a>
+                        <a href={window.getNetworkElement("etherscanURL") + "address/" + window.getNetworkElement("liquidityMiningRedeemAddress")} target="_blank">#etherscan</a>
                     </section>
                 </header>
                 <section className="PagerMenu">
